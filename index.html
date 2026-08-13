@@ -7,41 +7,171 @@
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#080808;color:#f5f5f5;font:14px system-ui,Arial}
+body{
+margin:0;
+background:#080808;
+color:#f5f5f5;
+font:14px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif
+}
 .hidden{display:none!important}
-.login{min-height:100vh;display:grid;place-items:center;padding:20px}
-.box{width:min(420px,100%);background:#111;border:1px solid #292929;border-radius:14px;padding:25px}
-input,select,textarea{width:100%;background:#090909;color:#fff;border:1px solid #333;border-radius:7px;padding:10px;margin-top:5px}
-label{display:block;color:#aaa;font-size:12px;margin-top:12px}
-.btn{background:#eee;color:#111;border:0;border-radius:7px;padding:10px 14px;font-weight:700;margin-top:14px;cursor:pointer}
-.btn.dark{background:#191919;color:#fff;border:1px solid #333}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.msg{margin-top:12px;color:#ff8888}
-.ok{color:#7ee787}
+
+.login{
+min-height:100vh;
+display:grid;
+place-items:center;
+padding:20px
+}
+
+.loginBox{
+width:min(430px,100%);
+background:#111;
+border:1px solid #292929;
+border-radius:14px;
+padding:28px
+}
+
+.brand{
+font-size:21px;
+font-weight:900;
+letter-spacing:.5px
+}
+
+h1,h2,h3{margin-top:0}
+
 .muted{color:#999}
+.small{font-size:12px}
+.error{color:#ff7777}
+.success{color:#7ee787}
+
+label{
+display:block;
+color:#aaa;
+font-size:12px;
+margin-top:12px
+}
+
+input,select,textarea{
+width:100%;
+background:#090909;
+color:#fff;
+border:1px solid #333;
+border-radius:7px;
+padding:10px;
+margin-top:5px;
+outline:none
+}
+
+input:focus,select:focus,textarea:focus{
+border-color:#777
+}
+
+textarea{
+min-height:90px;
+resize:vertical
+}
+
+button{
+font-family:inherit
+}
+
+.btn{
+background:#eee;
+color:#111;
+border:0;
+border-radius:7px;
+padding:10px 14px;
+font-weight:700;
+margin-top:14px;
+cursor:pointer
+}
+
+.btn.dark{
+background:#191919;
+color:#fff;
+border:1px solid #333
+}
+
+.btn.danger{
+background:#3a1515;
+color:#ff9999;
+border:1px solid #5a2222
+}
+
+.btn:disabled{
+opacity:.5;
+cursor:not-allowed
+}
+
+.link{
+display:inline-block;
+margin-top:13px;
+color:#ddd;
+text-decoration:underline;
+cursor:pointer
+}
+
+.statusBox{
+margin-top:15px;
+padding:10px;
+border-radius:7px;
+background:#0c0c0c;
+border:1px solid #222;
+line-height:1.5
+}
+
+/* APP */
 
 aside{
-position:fixed;inset:0 auto 0 0;width:225px;background:#101010;
-border-right:1px solid #292929;padding:18px 12px;overflow:auto
+position:fixed;
+inset:0 auto 0 0;
+width:235px;
+background:#101010;
+border-right:1px solid #292929;
+padding:18px 12px;
+overflow:auto;
+z-index:5
 }
 
-.brand{font-size:20px;font-weight:900;padding:8px 8px 18px}
+aside .brand{
+padding:8px 8px 18px
+}
 
 nav button{
-display:block;width:100%;padding:10px;background:none;border:0;
-color:#aaa;text-align:left;border-radius:7px;margin:3px 0;cursor:pointer
+display:block;
+width:100%;
+padding:10px;
+background:none;
+border:0;
+color:#aaa;
+text-align:left;
+border-radius:7px;
+margin:3px 0;
+cursor:pointer
 }
 
-nav button:hover,nav button.active{background:#222;color:#fff}
+nav button:hover,
+nav button.active{
+background:#222;
+color:#fff
+}
 
-main{margin-left:225px;padding:24px;max-width:1600px}
+main{
+margin-left:235px;
+padding:24px;
+max-width:1700px
+}
 
 .top{
-display:flex;justify-content:space-between;
-align-items:center;margin-bottom:20px
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+margin-bottom:20px
 }
 
-.top h1{margin:0}
+.top h1{
+margin:0 0 4px
+}
 
 .grid{
 display:grid;
@@ -49,50 +179,90 @@ grid-template-columns:repeat(4,1fr);
 gap:12px
 }
 
-.card,.panel{
+.card,
+.panel{
 background:#111;
 border:1px solid #292929;
 border-radius:10px
 }
 
-.card{padding:16px}
-.num{font-size:24px;font-weight:800;margin-top:6px}
+.card{
+padding:16px
+}
 
-.panel{margin-top:18px;overflow:auto}
+.num{
+font-size:25px;
+font-weight:800;
+margin-top:6px
+}
 
-.ph{
+.panel{
+margin-top:18px;
+overflow:auto
+}
+
+.panelHeader{
 padding:14px 16px;
 border-bottom:1px solid #292929;
 display:flex;
 justify-content:space-between;
-align-items:center
+align-items:center;
+gap:10px
 }
 
-.body{padding:16px}
-
-table{width:100%;border-collapse:collapse}
-th,td{text-align:left;padding:10px;border-bottom:1px solid #292929;white-space:nowrap}
-th{font-size:12px;color:#999}
+.panelBody{
+padding:16px
+}
 
 .toolbar{
 display:flex;
 gap:8px;
 flex-wrap:wrap;
-margin-bottom:12px
+margin-bottom:14px
+}
+
+.toolbar input{
+margin:0;
+min-width:240px
+}
+
+table{
+width:100%;
+border-collapse:collapse
+}
+
+th,td{
+text-align:left;
+padding:10px;
+border-bottom:1px solid #292929;
+white-space:nowrap
+}
+
+th{
+font-size:12px;
+color:#999
+}
+
+.badge{
+display:inline-block;
+padding:3px 8px;
+border-radius:999px;
+background:#222;
+font-size:11px
 }
 
 .modal{
 position:fixed;
 inset:0;
-background:#000b;
+background:#000c;
 display:grid;
 place-items:center;
 padding:15px;
 z-index:20
 }
 
-.modalbox{
-width:min(900px,100%);
+.modalBox{
+width:min(950px,100%);
 max-height:90vh;
 overflow:auto;
 background:#121212;
@@ -101,42 +271,83 @@ border-radius:12px;
 padding:20px
 }
 
+.modalHeader{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+margin-bottom:10px
+}
+
 .form{
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:10px
 }
 
-.wide{grid-column:1/-1}
-
-.badge{
-padding:3px 8px;
-border-radius:999px;
-background:#222;
-font-size:11px
+.wide{
+grid-column:1/-1
 }
 
-.role-owner{color:#7ee787}
-.role-admin{color:#79c0ff}
-.role-team{color:#f2cc60}
+.empty{
+padding:30px;
+text-align:center;
+color:#777
+}
+
+.roleOwner{color:#7ee787}
+.roleAdmin{color:#79c0ff}
+.roleTeam{color:#f2cc60}
 
 @media(max-width:850px){
-aside{width:60px}
-.brand{font-size:0}
-.brand:after{content:'AN';font-size:18px}
-nav button{font-size:0;text-align:center}
-nav button:after{content:'•';font-size:20px}
-main{margin-left:60px;padding:14px}
-.grid{grid-template-columns:repeat(2,1fr)}
-.form{grid-template-columns:1fr}
+
+aside{
+width:60px
+}
+
+aside .brand{
+font-size:0
+}
+
+aside .brand:after{
+content:"AN";
+font-size:18px
+}
+
+nav button{
+font-size:0;
+text-align:center
+}
+
+nav button:after{
+content:"•";
+font-size:20px
+}
+
+main{
+margin-left:60px;
+padding:14px
+}
+
+.grid{
+grid-template-columns:repeat(2,1fr)
+}
+
+.form{
+grid-template-columns:1fr
+}
+
 }
 </style>
 </head>
 
 <body>
 
-<div id="login" class="login">
-<div class="box">
+<!-- LOGIN -->
+
+<div id="loginScreen" class="login">
+
+<div class="loginBox">
 
 <div class="brand">ALPHA NATION</div>
 
@@ -147,36 +358,59 @@ Authorized users only. Accounts are created by Owner/Admin.
 </p>
 
 <label>
-Email / User ID
-<input id="email" type="email" autocomplete="username">
+Email
+<input
+id="loginEmail"
+type="email"
+autocomplete="username"
+placeholder="you@example.com"
+>
 </label>
 
 <label>
 Password
-<input id="password" type="password" autocomplete="current-password">
+<input
+id="loginPassword"
+type="password"
+autocomplete="current-password"
+placeholder="Password"
+>
 </label>
 
-<button id="loginBtn" class="btn">
+<button
+id="loginButton"
+class="btn"
+style="width:100%"
+>
 Sign in
 </button>
 
-<div id="msg" class="msg"></div>
+<div>
+<span id="forgotPassword" class="link">
+Forgot password?
+</span>
+</div>
 
-<div id="conn" class="muted">
-Connecting...
+<div id="loginMessage" class="statusBox muted">
+Starting CRM...
 </div>
 
 </div>
+
 </div>
 
+
+<!-- APPLICATION -->
 
 <div id="app" class="hidden">
 
 <aside>
 
-<div class="brand">ALPHA NATION</div>
+<div class="brand">
+ALPHA NATION
+</div>
 
-<nav id="nav">
+<nav id="navigation">
 
 <button data-page="dashboard">
 Dashboard
@@ -190,24 +424,954 @@ Policies
 Applications
 </button>
 
-<button class="adminOnly" data-page="leads">
+<button class="restricted" data-page="leads">
 Leads
 </button>
 
-<button class="adminOnly" data-page="calls">
+<button class="restricted" data-page="calls">
 Calls
 </button>
 
-<button class="adminOnly" data-page="buyers">
+<button class="restricted" data-page="buyers">
 Buyers
 </button>
 
-<button class="adminOnly" data-page="carriers">
+<button class="restricted" data-page="carriers">
 Carriers
 </button>
 
-<button class="adminOnly" data-page="agreements">
+<button class="restricted" data-page="campaigns">
+Campaigns
+</button>
+
+<button class="restricted" data-page="agreements">
 Agreements
 </button>
 
-<button class="adminOnly" data
+<button class="restricted" data-page="commissions">
+Commissions
+</button>
+
+<button class="restricted" data-page="payments">
+Payments
+</button>
+
+<button class="restricted" data-page="chargebacks">
+Chargebacks
+</button>
+
+<button class="restricted" data-page="team_payouts">
+Team Payouts
+</button>
+
+<button class="restricted" data-page="teams">
+Team Management
+</button>
+
+</nav>
+
+<button
+id="logoutButton"
+class="btn dark"
+style="width:100%"
+>
+Sign out
+</button>
+
+</aside>
+
+
+<main>
+
+<div class="top">
+
+<div>
+
+<h1 id="pageTitle">
+Dashboard
+</h1>
+
+<div id="userInfo" class="muted"></div>
+
+</div>
+
+<button
+id="addButton"
+class="btn"
+>
++ Add
+</button>
+
+</div>
+
+<section id="content"></section>
+
+</main>
+
+</div>
+
+
+<!-- MODAL -->
+
+<div id="modal" class="modal hidden">
+
+<div class="modalBox">
+
+<div class="modalHeader">
+
+<h3 id="modalTitle">
+Record
+</h3>
+
+<button
+id="closeModal"
+class="btn dark"
+>
+Close
+</button>
+
+</div>
+
+<form id="recordForm" class="form"></form>
+
+</div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+"use strict";
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+"https://yzhtisfmlowkcvavgsxd.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_GIhI_6sDVvzggGR1nVvEBg_psCt4iQu";
+
+let supabaseClient=null;
+
+let currentUser=null;
+let profile=null;
+let currentPage="dashboard";
+let currentRows=[];
+let currentMeta=null;
+let editingRecord=null;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+const $=id=>document.getElementById(id);
+
+function escapeHTML(value){
+
+return String(value ?? "")
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#39;");
+
+}
+
+function setLoginMessage(message,type="muted"){
+
+const box=$("loginMessage");
+
+box.className="statusBox "+type;
+
+box.textContent=message;
+
+}
+
+function isOwner(){
+
+return profile?.role==="Owner";
+
+}
+
+function isAdmin(){
+
+return profile?.role==="Admin";
+
+}
+
+function isAdminOrOwner(){
+
+return isOwner() || isAdmin();
+
+}
+
+function isTeam(){
+
+return profile?.role==="Team";
+
+}
+
+function stat(title,value){
+
+return `
+<div class="card">
+<div class="muted">${escapeHTML(title)}</div>
+<div class="num">${escapeHTML(value)}</div>
+</div>
+`;
+
+}
+
+
+/* =========================================================
+   TABLE CONFIGURATION
+   BASED ON ACTUAL SUPABASE SCHEMA
+========================================================= */
+
+const TABLES={
+
+policies:{
+title:"Policies",
+table:"policies",
+team:true,
+
+columns:[
+["customer_name","Customer"],
+["state","State"],
+["product","Product"],
+["plan_type","Level/GI"],
+["premium","Premium"],
+["coverage_amount","Coverage"],
+["policy_number","Policy"],
+["approval_status","Approval"],
+["first_draft_status","Draft"],
+["commission_status","Payout"],
+["agreed_payout","Payout"],
+["chargeback_amount","Chargeback"]
+],
+
+fields:[
+["customer_name","Customer"],
+["state","State"],
+["product","Product"],
+["plan_type","Level/GI","select",["Level","GI"]],
+["premium","Premium","number"],
+["coverage_amount","Coverage","number"],
+["policy_number","Policy number"],
+["effective_date","Effective date","date"],
+["approval_status","Approval status"],
+["first_draft_date","First draft date","date"],
+["first_draft_status","First draft status","select",["Pending","Cleared","Failed"]],
+["first_premium_amount","First premium","number"],
+["commission_status","Commission status","select",["Pending","Payable","Paid","Chargeback"]],
+["agreed_payout","Locked payout","number"],
+["agreement_version","Agreement version","number"],
+["commission_amount","Commission amount","number"],
+["chargeback_amount","Chargeback amount","number"],
+["retention_status","Retention status"],
+["retention_month","Retention month","number"],
+["notes","Notes","textarea"]
+]
+},
+
+
+applications:{
+title:"Applications",
+table:"applications",
+team:true,
+
+columns:[
+["customer_name","Customer"],
+["product","Product"],
+["plan_type","Level/GI"],
+["premium","Premium"],
+["coverage_amount","Coverage"],
+["application_number","Application #"],
+["status","Status"],
+["underwriting_status","Underwriting"]
+],
+
+fields:[
+["customer_name","Customer"],
+["product","Product"],
+["product_type","Product type"],
+["plan_type","Level/GI","select",["Level","GI"]],
+["premium","Premium","number"],
+["coverage_amount","Coverage","number"],
+["application_number","Application #"],
+["status","Status"],
+["underwriting_status","Underwriting"]
+]
+},
+
+
+leads:{
+title:"Leads",
+table:"leads",
+restricted:true,
+team:true,
+
+columns:[
+["lead_id","Lead ID"],
+["customer_name","Customer"],
+["phone","Phone"],
+["state","State"],
+["source","Source"],
+["call_status","Status"]
+],
+
+fields:[
+["lead_id","Lead ID"],
+["customer_name","Customer"],
+["phone","Phone"],
+["state","State"],
+["dob","DOB","date"],
+["source","Source"],
+["call_status","Call status"],
+["notes","Notes","textarea"]
+]
+},
+
+
+calls:{
+title:"Calls",
+table:"calls",
+restricted:true,
+team:true,
+
+columns:[
+["called_at","Date"],
+["status","Status"],
+["disposition","Disposition"],
+["duration_seconds","Seconds"],
+["recording_url","Recording"]
+],
+
+fields:[
+["called_at","Called at","datetime-local"],
+["status","Status"],
+["disposition","Disposition"],
+["duration_seconds","Duration seconds","number"],
+["recording_url","Recording URL"],
+["notes","Notes","textarea"]
+]
+},
+
+
+buyers:{
+title:"Buyers",
+table:"buyers",
+restricted:true,
+
+columns:[
+["company_name","Buyer"],
+["contact_name","Contact"],
+["email","Email"],
+["phone","Phone"],
+["payment_terms","Terms"],
+["status","Status"]
+],
+
+fields:[
+["company_name","Company"],
+["contact_name","Contact"],
+["email","Email","email"],
+["phone","Phone"],
+["payment_terms","Payment terms"],
+["status","Status","select",["Active","Inactive"]],
+["notes","Notes","textarea"]
+]
+},
+
+
+carriers:{
+title:"Carriers",
+table:"carriers",
+restricted:true,
+
+columns:[
+["name","Carrier"],
+["status","Status"],
+["notes","Notes"]
+],
+
+fields:[
+["name","Carrier name"],
+["status","Status","select",["Active","Inactive"]],
+["notes","Notes","textarea"]
+]
+},
+
+
+campaigns:{
+title:"Campaigns",
+table:"campaigns",
+restricted:true,
+
+columns:[
+["name","Campaign"],
+["campaign_type","Type"],
+["states","States"],
+["status","Status"]
+],
+
+fields:[
+["name","Campaign name"],
+["campaign_type","Campaign type"],
+["states","States"],
+["status","Status","select",["Active","Paused","Closed"]]
+]
+},
+
+
+agreements:{
+title:"Agreements",
+table:"agreements",
+restricted:true,
+
+columns:[
+["name","Agreement"],
+["version","Version"],
+["effective_from","Effective"],
+["effective_to","End"],
+["level_under_3","Level <3"],
+["level_over_3","Level >3"],
+["gi_payout","GI"]
+],
+
+fields:[
+["name","Agreement"],
+["version","Version","number"],
+["effective_from","Effective from","date"],
+["effective_to","Effective to","date"],
+["level_under_3","Level <3","number"],
+["level_over_3","Level >3","number"],
+["gi_payout","GI payout","number"],
+["first_premium_required","First premium required","checkbox"],
+["notes","Notes","textarea"]
+]
+},
+
+
+commissions:{
+title:"Commissions",
+table:"commissions",
+restricted:true,
+
+columns:[
+["policy_id","Policy ID"],
+["amount","Amount"],
+["status","Status"],
+["due_date","Due"],
+["paid_date","Paid"]
+],
+
+fields:[
+["policy_id","Policy ID"],
+["amount","Amount","number"],
+["status","Status","select",["Pending","Payable","Paid","Chargeback"]],
+["due_date","Due date","date"],
+["paid_date","Paid date","date"],
+["notes","Notes","textarea"]
+]
+},
+
+
+payments:{
+title:"Payments",
+table:"payments",
+restricted:true,
+
+columns:[
+["payment_date","Date"],
+["payment_type","Type"],
+["amount_usd","USD"],
+["amount_pkr","PKR"],
+["status","Status"],
+["reference","Reference"]
+],
+
+fields:[
+["buyer_id","Buyer ID"],
+["policy_id","Policy ID"],
+["payment_type","Payment type"],
+["amount_usd","USD","number"],
+["exchange_rate","Exchange rate","number"],
+["amount_pkr","PKR","number"],
+["status","Status"],
+["payment_date","Payment date","date"],
+["reference","Reference"],
+["notes","Notes","textarea"]
+]
+},
+
+
+chargebacks:{
+title:"Chargebacks",
+table:"chargebacks",
+restricted:true,
+
+columns:[
+["policy_id","Policy ID"],
+["amount_usd","Amount"],
+["reason","Reason"],
+["status","Status"],
+["chargeback_date","Date"],
+["recovered_date","Recovered"]
+],
+
+fields:[
+["policy_id","Policy ID"],
+["amount_usd","Amount","number"],
+["reason","Reason"],
+["status","Status"],
+["chargeback_date","Chargeback date","date"],
+["recovered_date","Recovered date","date"],
+["notes","Notes","textarea"]
+]
+},
+
+
+team_payouts:{
+title:"Team Payouts",
+table:"team_payouts",
+restricted:true,
+team:true,
+
+columns:[
+["policy_id","Policy"],
+["team_member_id","Team Member"],
+["cost_usd","Cost USD"],
+["cost_pkr","Cost PKR"],
+["status","Status"],
+["payment_date","Payment Date"]
+],
+
+fields:[
+["policy_id","Policy ID"],
+["team_member_id","Team member ID"],
+["cost_usd","Cost USD","number"],
+["exchange_rate","Exchange rate","number"],
+["cost_pkr","Cost PKR","number"],
+["status","Status"],
+["payment_date","Payment date","date"],
+["notes","Notes","textarea"]
+]
+}
+
+};
+
+
+/* =========================================================
+   INITIALIZE SUPABASE
+========================================================= */
+
+function initializeSupabase(){
+
+try{
+
+if(!window.supabase){
+
+throw new Error(
+"Supabase library did not load. Check your internet connection."
+);
+
+}
+
+supabaseClient=
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+return true;
+
+}catch(error){
+
+setLoginMessage(
+"Supabase initialization failed: "+
+error.message,
+"error"
+);
+
+return false;
+
+}
+
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+async function loadProfile(user){
+
+const result=await supabaseClient
+.from("profiles")
+.select(`
+id,
+full_name,
+role,
+active,
+created_at,
+updated_at,
+email,
+team_id
+`)
+.eq("id",user.id)
+.maybeSingle();
+
+if(result.error){
+
+throw new Error(
+"Profile error: "+
+result.error.message
+);
+
+}
+
+if(!result.data){
+
+throw new Error(
+"No CRM profile exists for this login. Ask the Owner to create your CRM profile."
+);
+
+}
+
+if(!["Owner","Admin","Team"].includes(result.data.role)){
+
+throw new Error(
+"Invalid CRM role."
+);
+
+}
+
+if(result.data.active===false){
+
+throw new Error(
+"Your CRM account is disabled."
+);
+
+}
+
+profile=result.data;
+
+currentUser=user;
+
+}
+
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+async function login(){
+
+const email=$("loginEmail").value.trim();
+const password=$("loginPassword").value;
+
+if(!email||!password){
+
+setLoginMessage(
+"Enter your email and password.",
+"error"
+);
+
+return;
+
+}
+
+$("loginButton").disabled=true;
+$("loginButton").textContent="Signing in...";
+
+try{
+
+const result=
+await supabaseClient.auth.signInWithPassword({
+email,
+password
+});
+
+if(result.error){
+
+throw result.error;
+
+}
+
+await loadProfile(result.data.user);
+
+showApp();
+
+goTo("dashboard");
+
+}catch(error){
+
+await supabaseClient.auth.signOut().catch(()=>{});
+
+setLoginMessage(
+error.message||
+"Sign in failed.",
+"error"
+);
+
+}finally{
+
+$("loginButton").disabled=false;
+$("loginButton").textContent="Sign in";
+
+}
+
+}
+
+
+/* =========================================================
+   FORGOT PASSWORD
+========================================================= */
+
+async function forgotPassword(){
+
+const email=$("loginEmail").value.trim();
+
+if(!email){
+
+setLoginMessage(
+"Enter your email first, then click Forgot password.",
+"error"
+);
+
+$("loginEmail").focus();
+
+return;
+
+}
+
+setLoginMessage(
+"Sending password reset email...",
+"muted"
+);
+
+try{
+
+const redirectURL=
+window.location.origin+
+window.location.pathname;
+
+const result=
+await supabaseClient.auth.resetPasswordForEmail(
+email,
+{
+redirectTo:redirectURL
+}
+);
+
+if(result.error){
+
+throw result.error;
+
+}
+
+setLoginMessage(
+"Password reset email sent. Check your email inbox.",
+"success"
+);
+
+}catch(error){
+
+setLoginMessage(
+"Password reset failed: "+
+error.message,
+"error"
+);
+
+}
+
+}
+
+
+/* =========================================================
+   SHOW APP
+========================================================= */
+
+function showApp(){
+
+$("loginScreen").classList.add("hidden");
+
+$("app").classList.remove("hidden");
+
+applyPermissions();
+
+renderUserInfo();
+
+}
+
+function renderUserInfo(){
+
+if(!profile)return;
+
+let roleClass=
+profile.role==="Owner"
+?
+"roleOwner"
+:
+profile.role==="Admin"
+?
+"roleAdmin"
+:
+"roleTeam";
+
+$("userInfo").innerHTML=`
+<span class="${roleClass}">
+${escapeHTML(profile.role)}
+</span>
+|
+${escapeHTML(
+profile.full_name||
+profile.email||
+currentUser?.email||
+""
+)}
+`;
+
+}
+
+
+/* =========================================================
+   PERMISSIONS
+========================================================= */
+
+function applyPermissions(){
+
+document
+.querySelectorAll(".restricted")
+.forEach(button=>{
+
+button.style.display=
+isAdminOrOwner()
+?
+"block"
+:
+"none";
+
+});
+
+}
+
+
+/* =========================================================
+   TEAM FILTER
+========================================================= */
+
+function applyTeamFilter(query,table){
+
+if(
+isTeam() &&
+profile?.team_id &&
+[
+"policies",
+"applications",
+"leads",
+"calls",
+"team_payouts"
+].includes(table)
+){
+
+return query.eq(
+"team_id",
+profile.team_id
+);
+
+}
+
+return query;
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+async function loadDashboard(){
+
+let query=
+supabaseClient
+.from("policies")
+.select(`
+id,
+premium,
+agreed_payout,
+chargeback_amount,
+first_draft_status,
+commission_status,
+created_at,
+team_id
+`);
+
+query=
+applyTeamFilter(query,"policies");
+
+const result=
+await query.limit(5000);
+
+if(result.error){
+
+$("content").innerHTML=`
+<div class="panel">
+<div class="panelBody error">
+${escapeHTML(result.error.message)}
+</div>
+</div>
+`;
+
+return;
+
+}
+
+const data=result.data||[];
+
+const weekAgo=
+Date.now()-
+7*24*60*60*1000;
+
+const cleared=
+data.filter(
+x=>x.first_draft_status==="Cleared"
+);
+
+const payable=
+data.filter(
+x=>x.commission_status==="Payable"
+);
+
+const paid=
+data.filter(
+x=>x.commission_status==="Paid"
+);
+
+const chargebacks=
+data.filter(
+x=>
+x.commission_status==="Chargeback"||
+Number(x.chargeback_amount||0)>0
+);
+
+const weekly=
+data.filter(
+x=>
+x.created_at &&
+new Date(x.created_at).getTime()>=weekAgo
+);
+
+$("content").innerHTML=`
+
+<div class="grid">
+
+${stat("Total Policies",data.length)}
+
+${stat("Cleared Policies",cleared.leng
