@@ -1,30 +1,213 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Alpha Nation CRM</title><style>*{box-sizing:border-box}body{margin:0;background:#080808;color:#f5f5f5;font:14px system-ui,Arial}.hidden{display:none!important}.login{min-height:100vh;display:grid;place-items:center;padding:20px}.box{width:min(420px,100%);background:#111;border:1px solid #292929;border-radius:14px;padding:25px}input,select,textarea{width:100%;background:#090909;color:#fff;border:1px solid #333;border-radius:7px;padding:10px;margin-top:5px}label{display:block;color:#aaa;font-size:12px;margin-top:12px}.btn{background:#eee;color:#111;border:0;border-radius:7px;padding:10px 14px;font-weight:700;margin-top:14px;cursor:pointer}.dark{background:#191919;color:#fff;border:1px solid #333}.msg{margin-top:12px;color:#ff8888}.ok{color:#7ee787}.muted{color:#999}aside{position:fixed;inset:0 auto 0 0;width:225px;background:#101010;border-right:1px solid #292929;padding:18px 12px;overflow:auto}.brand{font-size:20px;font-weight:900;padding:8px 8px 18px}nav button{display:block;width:100%;padding:10px;background:none;border:0;color:#aaa;text-align:left;border-radius:7px;margin:3px 0;cursor:pointer}nav button:hover,nav button.active{background:#222;color:#fff}main{margin-left:225px;padding:24px;max-width:1600px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.top h1{margin:0}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card,.panel{background:#111;border:1px solid #292929;border-radius:10px}.card{padding:16px}.num{font-size:24px;font-weight:800;margin-top:6px}.panel{margin-top:18px;overflow:auto}.ph{padding:14px 16px;border-bottom:1px solid #292929;display:flex;justify-content:space-between;align-items:center}.body{padding:16px}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;border-bottom:1px solid #292929;white-space:nowrap}th{font-size:12px;color:#999}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.modal{position:fixed;inset:0;background:#000b;display:grid;place-items:center;padding:15px;z-index:20}.modalbox{width:min(900px,100%);max-height:90vh;overflow:auto;background:#121212;border:1px solid #333;border-radius:12px;padding:20px}.form{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.wide{grid-column:1/-1}.badge{padding:3px 8px;border-radius:999px;background:#222;font-size:11px}@media(max-width:850px){aside{width:60px}.brand{font-size:0}.brand:after{content:'AN';font-size:18px}nav button{font-size:0;text-align:center}nav button:after{content:'•';font-size:20px}main{margin-left:60px;padding:14px}.grid{grid-template-columns:repeat(2,1fr)}.form{grid-template-columns:1fr}}</style></head><body>
-<div id="login" class="login"><div class="box"><div class="brand">ALPHA NATION</div><h2>CRM Login</h2><p class="muted">Authorized users only. Accounts are created by the Admin.</p><label>Email / User ID<input id="email" type="email" autocomplete="username"></label><label>Password<input id="password" type="password" autocomplete="current-password"></label><button id="loginBtn" class="btn">Sign in</button><div id="msg" class="msg"></div><div id="conn" class="muted">Connecting...</div></div></div>
-<div id="app" class="hidden"><aside><div class="brand">ALPHA NATION</div><nav id="nav"><button data-page="dashboard">Dashboard</button><button data-page="policies">Policies</button><button data-page="applications">Applications</button><button class="admin" data-page="leads">Leads</button><button class="admin" data-page="calls">Calls</button><button class="admin" data-page="buyers">Buyers</button><button class="admin" data-page="carriers">Carriers</button><button class="admin" data-page="agreements">Agreements</button><button class="admin" data-page="payments">Payments</button><button class="admin" data-page="chargebacks">Chargebacks</button><button class="admin" data-page="teams">Team Management</button></nav><button id="logout" class="btn dark">Sign out</button></aside><main><div class="top"><div><h1 id="title">Dashboard</h1><div id="who" class="muted"></div></div><button id="add" class="btn">+ Add</button></div><section id="content"></section></main></div>
-<div id="modal" class="modal hidden"><div class="modalbox"><div class="ph"><b id="modalTitle">Record</b><button id="close" class="btn dark">Close</button></div><form id="form" class="form"></form></div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
-const URL="https://yzhtisfmlowkcvavgsxd.supabase.co",KEY="sb_publishable_GIhI_6sDVvzggGR1nVvEBg_psCt4iQu",db=supabase.createClient(URL,KEY);let page='dashboard',rows=[],meta=null,profile=null,editing=null;
-const $=x=>document.getElementById(x),admin=()=>profile&&(profile.role==='admin'||profile.role==='owner');
-const P={
-policies:{title:'Policies',table:'policies',team:true,cols:[['customer_name','Customer'],['phone','Phone'],['state','State'],['carrier','Carrier'],['plan_type','Level/GI'],['premium','Premium'],['policy_number','Policy'],['first_draft_status','Draft'],['commission_status','Payout'],['agreed_payout','Payout'],['chargeback_amount','Chargeback']],fields:[['customer_name','Customer'],['phone','Phone'],['policy_number','Policy number'],['state','State'],['carrier','Carrier'],['product','Product'],['plan_type','Level/GI'],['premium','Premium','number'],['coverage_amount','Coverage','number'],['first_draft_date','First draft','date'],['first_draft_status','Draft status'],['commission_status','Payout status'],['agreed_payout','Locked payout','number'],['agreement_tag','Agreement tag'],['chargeback_amount','Chargeback','number'],['notes','Notes','textarea']]},
-applications:{title:'Applications',table:'applications',team:true,cols:[['customer_name','Customer'],['product','Product'],['plan_type','Level/GI'],['premium','Premium'],['coverage_amount','Coverage'],['status','Status'],['underwriting_status','Underwriting']],fields:[['customer_name','Customer'],['product','Product'],['product_type','Product type'],['plan_type','Level/GI'],['premium','Premium','number'],['coverage_amount','Coverage','number'],['application_number','Application #'],['status','Status'],['underwriting_status','Underwriting'],['notes','Notes','textarea']]},
-leads:{title:'Leads',table:'leads',a:true,cols:[['lead_id','Lead ID'],['customer_name','Customer'],['phone','Phone'],['state','State'],['source','Source'],['call_status','Status']],fields:[['lead_id','Lead ID'],['customer_name','Customer'],['phone','Phone'],['state','State'],['source','Source'],['call_status','Status'],['notes','Notes','textarea']]},calls:{title:'Calls',table:'calls',a:true,cols:[['called_at','Date'],['status','Status'],['disposition','Disposition'],['duration_seconds','Seconds'],['notes','Notes']],fields:[['status','Status'],['disposition','Disposition'],['duration_seconds','Seconds','number'],['recording_url','Recording URL'],['notes','Notes','textarea']]},buyers:{title:'Buyers',table:'buyers',a:true,cols:[['company_name','Buyer'],['contact_name','Contact'],['payment_terms','Terms'],['status','Status']],fields:[['company_name','Buyer'],['contact_name','Contact'],['email','Email'],['phone','Phone'],['payment_terms','Terms'],['status','Status'],['notes','Notes','textarea']]},carriers:{title:'Carriers',table:'carriers',a:true,cols:[['name','Carrier'],['status','Status']],fields:[['name','Carrier'],['status','Status']]},agreements:{title:'Agreements',table:'agreements',a:true,cols:[['name','Agreement'],['version','Version'],['effective_from','Effective'],['effective_to','End'],['level_under_3','Level <3'],['level_over_3','Level >3'],['gi_payout','GI']],fields:[['name','Agreement'],['version','Version','number'],['effective_from','Effective','date'],['effective_to','End','date'],['level_under_3','Level <3','number'],['level_over_3','Level >3','number'],['gi_payout','GI','number'],['notes','Notes','textarea']]},payments:{title:'Payments',table:'payments',a:true,cols:[['payment_date','Date'],['payment_type','Type'],['amount_usd','USD'],['amount_pkr','PKR'],['status','Status']],fields:[['payment_date','Date','date'],['payment_type','Type'],['amount_usd','USD','number'],['exchange_rate','FX','number'],['amount_pkr','PKR','number'],['status','Status'],['reference','Reference'],['notes','Notes','textarea']]},chargebacks:{title:'Chargebacks',table:'chargebacks',a:true,cols:[['amount_usd','Amount'],['reason','Reason'],['status','Status'],['chargeback_date','Date'],['recovered_date','Recovered']],fields:[['amount_usd','Amount','number'],['reason','Reason'],['status','Status'],['chargeback_date','Date','date'],['recovered_date','Recovered','date'],['notes','Notes','textarea']]}};
-function esc(x){return String(x??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;')}function stat(a,b){return `<div class="card"><div class="muted">${esc(a)}</div><div class="num">${esc(b)}</div></div>`}
-async function loadProfile(u){let r=await db.from('profiles').select('id,email,role,team_id,full_name,teams(id,name)').eq('id',u.id).single();if(r.error)throw new Error('Your account has no CRM profile. Ask the Admin to create and assign your account.');if(!['admin','owner','team'].includes(r.data.role))throw new Error('Invalid CRM role.');profile=r.data}
-function permissions(){document.querySelectorAll('.admin').forEach(x=>x.style.display=admin()?'block':'none')}
-async function login(){let e=$('email').value.trim(),p=$('password').value;if(!e||!p){$('msg').textContent='Enter email and password.';return}$('loginBtn').disabled=true;$('loginBtn').textContent='Signing in...';try{let r=await db.auth.signInWithPassword({email:e,password:p});if(r.error)throw r.error;await loadProfile(r.data.user);$('login').classList.add('hidden');$('app').classList.remove('hidden');$('who').textContent=(admin()?'ADMIN':'TEAM')+' | '+r.data.user.email;permissions();go('dashboard')}catch(x){await db.auth.signOut().catch(()=>{});$('msg').textContent=x.message||'Sign in failed.'}finally{$('loginBtn').disabled=false;$('loginBtn').textContent='Sign in'}}
-async function logout(){await db.auth.signOut();location.reload()}
-function query(t){let q=db.from(t).select('*');if(!admin()&&profile?.team_id)q=q.eq('team_id',profile.team_id);return q}
-async function dashboard(){let q=query('policies').select('id,first_draft_status,commission_status,agreed_payout,chargeback_amount,created_at');let r=await q.limit(5000);if(r.error){$('content').innerHTML=`<div class="panel"><div class="body">${esc(r.error.message)}</div></div>`;return}let d=r.data||[],w=new Date(Date.now()-6048e5),pay=d.filter(x=>x.commission_status==='Payable'),paid=d.filter(x=>x.commission_status==='Paid');$('content').innerHTML='<div class="grid">'+stat('Total policies',d.length)+stat('Cleared policies',d.filter(x=>x.first_draft_status==='Cleared').length)+stat('Payable policies',pay.length)+stat('Paid policies',paid.length)+stat('Chargebacks',d.filter(x=>x.commission_status==='Chargeback'||Number(x.chargeback_amount)>0).length)+stat("This week's sales",d.filter(x=>x.created_at&&new Date(x.created_at)>=w).length)+stat('Payable dollars','$'+pay.reduce((a,x)=>a+Number(x.agreed_payout||0),0).toFixed(2))+stat('Paid dollars','$'+paid.reduce((a,x)=>a+Number(x.agreed_payout||0),0).toFixed(2))+'</div><div class="panel"><div class="body"><b>'+(admin()?'Admin account':'Team account')+'</b><p class="muted">'+(admin()?'All teams are visible. Team users only see their assigned team.':'You can only view and edit your own team records.')+'</p></div></div>'}
-async function table(){meta=P[page];let r=await query(meta.table).order('created_at',{ascending:false}).limit(500);if(r.error){$('content').innerHTML=`<div class="panel"><div class="body">${esc(r.error.message)}</div></div>`;return}rows=r.data||[];render(rows)}
-function render(list){let h='<div class="panel"><div class="body"><div class="toolbar"><input id="search" placeholder="Search"></div><table><tr>'+meta.cols.map(c=>`<th>${c[1]}</th>`).join('')+'<th>Action</th></tr>';list.forEach(x=>{h+='<tr>'+meta.cols.map(c=>`<td>${esc(x[c[0]])}</td>`).join('')+`<td><button class="btn dark" onclick="edit(${JSON.stringify(x).replaceAll('"','&quot;')})">Edit</button></td></tr>`});$('content').innerHTML=h+'</table></div></div>';$('search').oninput=e=>render(rows.filter(x=>JSON.stringify(x).toLowerCase().includes(e.target.value.toLowerCase())))}
-window.edit=x=>openForm(x);
-function openForm(rec){if(meta.a&&!admin()){alert('Admin access required.');return}editing=rec;modalTitle.textContent=(rec?'Edit ':'New ')+meta.title;form.innerHTML=meta.fields.map(f=>`<div class="${f[2]==='textarea'?'wide':''}"><label>${f[1]}<${f[2]==='textarea'?'textarea':'input'} name="${f[0]}" type="${f[2]&&f[2]!=='textarea'?f[2]:'text'}">${f[2]==='textarea'?(rec?.[f[0]]??''):''}</${f[2]==='textarea'?'textarea':'input'}></label></div>`).join('')+'<div class="wide"><button class="btn" type="submit">Save</button></div>';modal.classList.remove('hidden');form.onsubmit=save}
-async function save(e){e.preventDefault();let o=Object.fromEntries(new FormData(form));if(!admin()&&meta.team)o.team_id=profile.team_id;Object.keys(o).forEach(k=>{if(o[k]==='')delete o[k]});['premium','coverage_amount','agreed_payout','chargeback_amount','amount_usd','amount_pkr','exchange_rate','version','duration_seconds'].forEach(k=>{if(k in o)o[k]=Number(o[k])});let r=editing?await db.from(meta.table).update(o).eq('id',editing.id):await db.from(meta.table).insert(o);if(r.error)alert(r.error.message);else{modal.classList.add('hidden');table()}}
-async function teams(){if(!admin())return;let [t,u]=await Promise.all([db.from('teams').select('id,name').order('name'),db.from('profiles').select('id,email,full_name,role,team_id,teams(name)').order('created_at',{ascending:false})]);if(t.error||u.error){$('content').innerHTML='<div class="panel"><div class="body">'+esc((t.error||u.error).message)+'</div></div>';return}let h='<div class="panel"><div class="ph"><b>Team users</b><button id="newUser" class="btn">+ Create Team User</button></div><div class="body"><p class="muted">Owner can create Admin or Team accounts. Admin can create Team accounts. There is no public signup.</p><table><tr><th>Name</th><th>Email</th><th>Role</th><th>Team</th></tr>';u.data.forEach(x=>h+=`<tr><td>${esc(x.full_name)}</td><td>${esc(x.email)}</td><td><span class="badge">${esc(x.role)}</span></td><td>${esc(x.teams?.name||'Unassigned')}</td></tr>`);h+='</table></div></div><div class="panel"><div class="body"><b>Teams</b><table><tr><th>Name</th><th>ID</th></tr>';t.data.forEach(x=>h+=`<tr><td>${esc(x.name)}</td><td>${esc(x.id)}</td></tr>`);$('content').innerHTML=h+'</table></div></div>';$('newUser').onclick=()=>userForm(t.data)}
-function userForm(teams){modalTitle.textContent='Create Team User';form.innerHTML='<div><label>Full name<input name="full_name"></label></div><div><label>Email<input name="email" type="email"></label></div><div><label>Temporary password<input name="password" type="password"></label></div><div><label>Team<select name="team_id">'+teams.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('')+'</select></label></div><div><label>Role<input value="Team" disabled></label></div><div class="wide"><button class="btn" type="submit">Create user</button></div>';modal.classList.remove('hidden');form.onsubmit=async e=>{e.preventDefault();let v=Object.fromEntries(new FormData(form));if(v.password.length<6)return alert('Password must be at least 6 characters.');let r=await db.functions.invoke('admin-create-user',{body:{email:v.email,password:v.password,full_name:v.full_name||'',team_id:v.team_id,role:'team'}});if(r.error||r.data?.error)alert((r.error||new Error(r.data.error)).message);else{modal.classList.add('hidden');teams()}}}
-function go(p){if(p==='teams'&&!admin())p='dashboard';if(P[p]?.a&&!admin())p='dashboard';page=p;nav.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.page===p));$('title').textContent=p==='teams'?'Team Management':p==='dashboard'?'Dashboard':P[p].title;$('add').style.display=p==='dashboard'||p==='teams'?'none':'block';p==='dashboard'?dashboard():p==='teams'?teams():table()}
-$('loginBtn').onclick=login;$('logout').onclick=logout;$('close').onclick=()=>modal.classList.add('hidden');$('add').onclick=()=>openForm(null);nav.onclick=e=>{let b=e.target.closest('[data-page]');if(b)go(b.dataset.page)};password.onkeydown=e=>e.key==='Enter'&&login();
-db.auth.onAuthStateChange(async(e,s)=>{if(e==='SIGNED_OUT'){location.reload()}else if(s&&e!=='INITIAL_SESSION'){try{await loadProfile(s.user);$('login').classList.add('hidden');$('app').classList.remove('hidden');$('who').textContent=(admin()?'ADMIN':'TEAM')+' | '+s.user.email;permissions();go('dashboard')}catch(x){await db.auth.signOut()}}});
-(async()=>{try{conn.textContent='Supabase connected.';let r=await db.auth.getSession();if(r.data.session){await loadProfile(r.data.session.user);$('login').classList.add('hidden');$('app').classList.remove('hidden');$('who').textContent=(admin()?'ADMIN':'TEAM')+' | '+r.data.session.user.email;permissions();go('dashboard')}}catch(e){conn.textContent='Connection failed.';msg.textContent=e.message}})();
-</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Alpha Nation CRM</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080808;color:#f5f5f5;font:14px system-ui,Arial}
+.hidden{display:none!important}
+.login{min-height:100vh;display:grid;place-items:center;padding:20px}
+.box{width:min(420px,100%);background:#111;border:1px solid #292929;border-radius:14px;padding:25px}
+input,select,textarea{width:100%;background:#090909;color:#fff;border:1px solid #333;border-radius:7px;padding:10px;margin-top:5px}
+label{display:block;color:#aaa;font-size:12px;margin-top:12px}
+.btn{background:#eee;color:#111;border:0;border-radius:7px;padding:10px 14px;font-weight:700;margin-top:14px;cursor:pointer}
+.btn.dark{background:#191919;color:#fff;border:1px solid #333}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.msg{margin-top:12px;color:#ff8888}
+.ok{color:#7ee787}
+.muted{color:#999}
+
+aside{
+position:fixed;inset:0 auto 0 0;width:225px;background:#101010;
+border-right:1px solid #292929;padding:18px 12px;overflow:auto
+}
+
+.brand{font-size:20px;font-weight:900;padding:8px 8px 18px}
+
+nav button{
+display:block;width:100%;padding:10px;background:none;border:0;
+color:#aaa;text-align:left;border-radius:7px;margin:3px 0;cursor:pointer
+}
+
+nav button:hover,nav button.active{background:#222;color:#fff}
+
+main{margin-left:225px;padding:24px;max-width:1600px}
+
+.top{
+display:flex;justify-content:space-between;
+align-items:center;margin-bottom:20px
+}
+
+.top h1{margin:0}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px
+}
+
+.card,.panel{
+background:#111;
+border:1px solid #292929;
+border-radius:10px
+}
+
+.card{padding:16px}
+.num{font-size:24px;font-weight:800;margin-top:6px}
+
+.panel{margin-top:18px;overflow:auto}
+
+.ph{
+padding:14px 16px;
+border-bottom:1px solid #292929;
+display:flex;
+justify-content:space-between;
+align-items:center
+}
+
+.body{padding:16px}
+
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:10px;border-bottom:1px solid #292929;white-space:nowrap}
+th{font-size:12px;color:#999}
+
+.toolbar{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+margin-bottom:12px
+}
+
+.modal{
+position:fixed;
+inset:0;
+background:#000b;
+display:grid;
+place-items:center;
+padding:15px;
+z-index:20
+}
+
+.modalbox{
+width:min(900px,100%);
+max-height:90vh;
+overflow:auto;
+background:#121212;
+border:1px solid #333;
+border-radius:12px;
+padding:20px
+}
+
+.form{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px
+}
+
+.wide{grid-column:1/-1}
+
+.badge{
+padding:3px 8px;
+border-radius:999px;
+background:#222;
+font-size:11px
+}
+
+.role-owner{color:#7ee787}
+.role-admin{color:#79c0ff}
+.role-team{color:#f2cc60}
+
+@media(max-width:850px){
+aside{width:60px}
+.brand{font-size:0}
+.brand:after{content:'AN';font-size:18px}
+nav button{font-size:0;text-align:center}
+nav button:after{content:'•';font-size:20px}
+main{margin-left:60px;padding:14px}
+.grid{grid-template-columns:repeat(2,1fr)}
+.form{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<div id="login" class="login">
+<div class="box">
+
+<div class="brand">ALPHA NATION</div>
+
+<h2>CRM Login</h2>
+
+<p class="muted">
+Authorized users only. Accounts are created by Owner/Admin.
+</p>
+
+<label>
+Email / User ID
+<input id="email" type="email" autocomplete="username">
+</label>
+
+<label>
+Password
+<input id="password" type="password" autocomplete="current-password">
+</label>
+
+<button id="loginBtn" class="btn">
+Sign in
+</button>
+
+<div id="msg" class="msg"></div>
+
+<div id="conn" class="muted">
+Connecting...
+</div>
+
+</div>
+</div>
+
+
+<div id="app" class="hidden">
+
+<aside>
+
+<div class="brand">ALPHA NATION</div>
+
+<nav id="nav">
+
+<button data-page="dashboard">
+Dashboard
+</button>
+
+<button data-page="policies">
+Policies
+</button>
+
+<button data-page="applications">
+Applications
+</button>
+
+<button class="adminOnly" data-page="leads">
+Leads
+</button>
+
+<button class="adminOnly" data-page="calls">
+Calls
+</button>
+
+<button class="adminOnly" data-page="buyers">
+Buyers
+</button>
+
+<button class="adminOnly" data-page="carriers">
+Carriers
+</button>
+
+<button class="adminOnly" data-page="agreements">
+Agreements
+</button>
+
+<button class="adminOnly" data
