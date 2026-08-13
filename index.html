@@ -4,311 +4,94 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Alpha Nation CRM</title>
-
 <style>
 *{box-sizing:border-box}
-
-body{
-margin:0;
-background:#080808;
-color:#f5f5f5;
-font:14px system-ui,Arial,sans-serif
-}
-
+body{margin:0;background:#080808;color:#f5f5f5;font:14px system-ui,Arial}
 .hidden{display:none!important}
-
-.login{
-min-height:100vh;
-display:grid;
-place-items:center;
-padding:20px
-}
-
-.box{
-width:min(420px,100%);
-background:#111;
-border:1px solid #292929;
-border-radius:14px;
-padding:25px
-}
-
-.brand{
-font-size:21px;
-font-weight:900;
-letter-spacing:.5px
-}
-
-h2{margin-bottom:8px}
-
+.login{min-height:100vh;display:grid;place-items:center;padding:20px}
+.box{width:min(430px,100%);background:#111;border:1px solid #292929;border-radius:14px;padding:25px}
+.brand{font-size:21px;font-weight:900;letter-spacing:.5px}
 .muted{color:#999}
-
-label{
-display:block;
-color:#aaa;
-font-size:12px;
-margin-top:15px
-}
-
-input,select,textarea{
-width:100%;
-background:#090909;
-color:#fff;
-border:1px solid #333;
-border-radius:7px;
-padding:11px;
-margin-top:6px;
-outline:none
-}
-
-input:focus,select:focus,textarea:focus{
-border-color:#777
-}
-
-.btn{
-background:#eee;
-color:#111;
-border:0;
-border-radius:7px;
-padding:11px 15px;
-font-weight:700;
-margin-top:15px;
-cursor:pointer
-}
-
-.btn:disabled{
-opacity:.5;
-cursor:not-allowed
-}
-
-.dark{
-background:#191919;
-color:#fff;
-border:1px solid #333
-}
-
-.link{
-background:none;
-border:0;
-color:#aaa;
-cursor:pointer;
-padding:10px 0;
-font-size:13px
-}
-
-.link:hover{color:#fff}
-
-.msg{
-margin-top:13px;
-line-height:1.5
-}
-
-.error{color:#ff8888}
+label{display:block;color:#aaa;font-size:12px;margin-top:11px}
+input,select,textarea{width:100%;background:#090909;color:#fff;border:1px solid #333;border-radius:7px;padding:10px;margin-top:5px}
+textarea{min-height:90px;resize:vertical}
+.btn{background:#eee;color:#111;border:0;border-radius:7px;padding:10px 14px;font-weight:700;margin-top:12px;cursor:pointer}
+.btn.dark{background:#191919;color:#fff;border:1px solid #333}
+.btn.red{background:#8b2020;color:#fff}
+.btn:disabled{opacity:.5}
+.msg{margin-top:12px;line-height:1.5}
+.error{color:#ff7777}
 .success{color:#7ee787}
-
-.status{
-margin-top:15px;
-padding:10px;
-border-radius:7px;
-background:#0d0d0d;
-border:1px solid #222;
-color:#aaa;
-font-size:12px;
-word-break:break-word
-}
-
-aside{
-position:fixed;
-inset:0 auto 0 0;
-width:225px;
-background:#101010;
-border-right:1px solid #292929;
-padding:18px 12px;
-overflow:auto
-}
-
-nav button{
-display:block;
-width:100%;
-padding:10px;
-background:none;
-border:0;
-color:#aaa;
-text-align:left;
-border-radius:7px;
-margin:3px 0;
-cursor:pointer
-}
-
-nav button:hover,
-nav button.active{
-background:#222;
-color:#fff
-}
-
-main{
-margin-left:225px;
-padding:24px;
-max-width:1600px
-}
-
-.top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px
-}
-
+.status{margin-top:12px;padding:9px;border:1px solid #292929;border-radius:7px;color:#999;font-size:12px;word-break:break-word}
+aside{position:fixed;inset:0 auto 0 0;width:225px;background:#101010;border-right:1px solid #292929;padding:18px 12px;overflow:auto}
+nav button{display:block;width:100%;padding:10px;background:none;border:0;color:#aaa;text-align:left;border-radius:7px;margin:3px 0;cursor:pointer}
+nav button:hover,nav button.active{background:#222;color:#fff}
+main{margin-left:225px;padding:24px;max-width:1700px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
 .top h1{margin:0}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:12px
-}
-
-.card,.panel{
-background:#111;
-border:1px solid #292929;
-border-radius:10px
-}
-
-.card{padding:16px}
-
-.num{
-font-size:24px;
-font-weight:800;
-margin-top:6px
-}
-
-.panel{
-margin-top:18px;
-overflow:auto
-}
-
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.card,.panel{background:#111;border:1px solid #292929;border-radius:10px}
+.card{padding:16px}.num{font-size:24px;font-weight:800;margin-top:6px}
+.panel{margin-top:18px;overflow:auto}
+.ph{padding:14px 16px;border-bottom:1px solid #292929;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .body{padding:16px}
-
-.ph{
-padding:14px 16px;
-border-bottom:1px solid #292929;
-display:flex;
-justify-content:space-between;
-align-items:center
-}
-
-table{
-width:100%;
-border-collapse:collapse
-}
-
-th,td{
-text-align:left;
-padding:10px;
-border-bottom:1px solid #292929;
-white-space:nowrap
-}
-
-th{
-font-size:12px;
-color:#999
-}
-
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.toolbar input{margin:0;max-width:400px}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:9px;border-bottom:1px solid #292929;white-space:nowrap}
+th{font-size:11px;color:#999}
+.actions{display:flex;gap:5px}
+.actions .btn{margin:0;padding:6px 9px;font-size:12px}
+.modal{position:fixed;inset:0;background:#000c;display:grid;place-items:center;padding:15px;z-index:50}
+.modalbox{width:min(1000px,100%);max-height:92vh;overflow:auto;background:#121212;border:1px solid #333;border-radius:12px;padding:20px}
+.form{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.wide{grid-column:1/-1}
+.formActions{display:flex;gap:8px;justify-content:flex-end}
+.badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#222;font-size:11px}
+.link{background:none;border:0;color:#aaa;cursor:pointer;padding:9px 0}
 @media(max-width:850px){
-
 aside{width:60px}
-
-aside .brand{
-font-size:0
-}
-
-aside .brand:after{
-content:"AN";
-font-size:18px
-}
-
-nav button{
-font-size:0;
-text-align:center
-}
-
-nav button:after{
-content:"•";
-font-size:20px
-}
-
-main{
-margin-left:60px;
-padding:14px
-}
-
-.grid{
-grid-template-columns:repeat(2,1fr)
-}
+aside .brand{font-size:0}
+aside .brand:after{content:"AN";font-size:18px}
+nav button{font-size:0;text-align:center}
+nav button:after{content:"•";font-size:20px}
+main{margin-left:60px;padding:14px}
+.grid{grid-template-columns:repeat(2,1fr)}
+.form{grid-template-columns:1fr}
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div id="loginPage" class="login">
-
+<div id="login" class="login">
 <div class="box">
-
 <div class="brand">ALPHA NATION</div>
-
 <h2>CRM Login</h2>
+<p class="muted">Authorized users only. Accounts are created by Owner/Admin.</p>
 
-<p class="muted">
-Authorized users only. Accounts are created by Owner/Admin.
-</p>
-
-<label>
-Email
-<input
-id="email"
-type="email"
-autocomplete="username"
-placeholder="you@example.com">
+<label>Email
+<input id="email" type="email" autocomplete="username" placeholder="you@example.com">
 </label>
 
-<label>
-Password
-<input
-id="password"
-type="password"
-autocomplete="current-password"
-placeholder="Password">
+<label>Password
+<input id="password" type="password" autocomplete="current-password" placeholder="Password">
 </label>
 
-<button id="loginBtn" class="btn">
-Sign in
-</button>
+<button id="loginBtn" class="btn">Sign in</button>
+<button id="forgotBtn" class="link">Forgot password?</button>
 
-<div>
-<button id="forgotBtn" class="link">
-Forgot password?
-</button>
-</div>
-
-<div id="message" class="msg"></div>
-
-<div id="status" class="status">
-Starting CRM...
-</div>
-
+<div id="msg" class="msg"></div>
+<div id="status" class="status">Starting CRM...</div>
 </div>
 </div>
 
-
-<!-- APP -->
 <div id="app" class="hidden">
 
 <aside>
-
 <div class="brand">ALPHA NATION</div>
 
 <nav id="nav">
-
 <button data-page="dashboard">Dashboard</button>
 <button data-page="policies">Policies</button>
 <button data-page="applications">Applications</button>
@@ -316,504 +99,662 @@ Starting CRM...
 <button data-page="calls">Calls</button>
 <button data-page="buyers">Buyers</button>
 <button data-page="carriers">Carriers</button>
+<button data-page="campaigns">Campaigns</button>
 <button data-page="agreements">Agreements</button>
+<button data-page="commissions">Commissions</button>
 <button data-page="payments">Payments</button>
+<button data-page="team_payouts">Team Payouts</button>
 <button data-page="chargebacks">Chargebacks</button>
-<button data-page="teams">Team Management</button>
-
+<button data-page="teams">Teams</button>
 </nav>
 
-<button id="logoutBtn" class="btn dark">
-Sign out
-</button>
-
+<button id="logout" class="btn dark">Sign out</button>
 </aside>
 
 <main>
-
 <div class="top">
-
 <div>
-<h1 id="pageTitle">Dashboard</h1>
-<div id="userInfo" class="muted"></div>
+<h1 id="title">Dashboard</h1>
+<div id="who" class="muted"></div>
 </div>
-
+<button id="addBtn" class="btn">+ Add</button>
 </div>
 
 <section id="content"></section>
-
 </main>
-
 </div>
 
+<div id="modal" class="modal hidden">
+<div class="modalbox">
+<div class="ph">
+<b id="modalTitle">Record</b>
+<button id="close" class="btn dark">Close</button>
+</div>
+<form id="recordForm" class="form"></form>
+</div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-
 "use strict";
 
-/*
-====================================================
-SUPABASE CONFIGURATION
-====================================================
-*/
+const SUPABASE_URL="https://yzhtisfmlowkcvavgsxd.supabase.co";
+const SUPABASE_KEY="sb_publishable_GIhI_6sDVvzggGR1nVvEBg_psCt4iQu";
 
-const SUPABASE_URL =
-"https://yzhtisfmlowkcvavgsxd.supabase.co";
+let db=null;
+let user=null;
+let profile=null;
+let currentPage="dashboard";
+let currentRows=[];
+let editing=null;
 
-const SUPABASE_KEY =
-"sb_publishable_GIhI_6sDVvzggGR1nVvEBg_psCt4iQu";
+const $=id=>document.getElementById(id);
 
+const pageConfig={
 
-/*
-====================================================
-ELEMENTS
-====================================================
-*/
+policies:{
+title:"Policies",
+table:"policies",
+columns:[
+["customer_name","Customer"],
+["state","State"],
+["product","Product"],
+["plan_type","Level/GI"],
+["premium","Premium"],
+["coverage_amount","Coverage"],
+["policy_number","Policy"],
+["approval_status","Approval"],
+["first_draft_status","Draft"],
+["commission_status","Payout"],
+["agreed_payout","Payout"],
+["chargeback_amount","Chargeback"]
+],
+fields:[
+["customer_name","Customer","text",true],
+["state","State","text"],
+["carrier_id","Carrier","carrier"],
+["buyer_id","Buyer","buyer"],
+["campaign_id","Campaign","campaign"],
+["product","Product","text"],
+["plan_type","Level/GI","select",false,["Level","GI"]],
+["coverage_amount","Coverage","number"],
+["premium","Premium","number"],
+["policy_number","Policy number","text"],
+["effective_date","Effective date","date"],
+["approval_status","Approval status","select",false,["Submitted","Approved","Declined","Cancelled"]],
+["first_draft_date","First draft date","date"],
+["first_draft_status","Draft status","select",false,["Pending","Cleared","Failed"]],
+["first_premium_amount","First premium","number"],
+["commission_status","Commission status","select",false,["Pending","Payable","Paid","Chargeback"]],
+["agreed_payout","Agreed payout","number"],
+["agreement_id","Agreement","agreement"],
+["agreement_version","Agreement version","number"],
+["commission_amount","Commission amount","number"],
+["chargeback_amount","Chargeback amount","number"],
+["retention_status","Retention status","select",false,["Pending","Retained","Cancelled"]],
+["retention_month","Retention month","number"],
+["notes","Notes","textarea"]
+]
+},
 
-const loginPage = document.getElementById("loginPage");
-const app = document.getElementById("app");
+applications:{
+title:"Applications",
+table:"applications",
+columns:[
+["customer_name","Customer"],
+["product","Product"],
+["plan_type","Level/GI"],
+["premium","Premium"],
+["coverage_amount","Coverage"],
+["application_number","Application"],
+["status","Status"],
+["underwriting_status","Underwriting"]
+],
+fields:[
+["customer_name","Customer","text",true],
+["lead_id","Lead","lead"],
+["carrier_id","Carrier","carrier"],
+["product","Product","text"],
+["product_type","Product type","text"],
+["plan_type","Level/GI","select",false,["Level","GI"]],
+["coverage_amount","Coverage","number"],
+["premium","Premium","number"],
+["application_number","Application number","text"],
+["status","Status","select",false,["Submitted","Approved","Declined","Pending","Cancelled"]],
+["underwriting_status","Underwriting","text"]
+]
+},
 
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
+leads:{
+title:"Leads",
+table:"leads",
+columns:[
+["lead_id","Lead ID"],
+["customer_name","Customer"],
+["phone","Phone"],
+["state","State"],
+["dob","DOB"],
+["source","Source"],
+["call_status","Status"]
+],
+fields:[
+["lead_id","Lead ID","text"],
+["customer_name","Customer","text",true],
+["phone","Phone","text",true],
+["state","State","text"],
+["dob","Date of birth","date"],
+["source","Source","text"],
+["campaign_id","Campaign","campaign"],
+["closer_id","Closer","profile"],
+["call_status","Call status","select",false,["New","Contacted","Qualified","Not Interested","Sold","Do Not Call"]],
+["notes","Notes","textarea"]
+]
+},
 
-const loginBtn = document.getElementById("loginBtn");
-const forgotBtn = document.getElementById("forgotBtn");
-const logoutBtn = document.getElementById("logoutBtn");
+calls:{
+title:"Calls",
+table:"calls",
+columns:[
+["called_at","Date"],
+["status","Status"],
+["disposition","Disposition"],
+["duration_seconds","Seconds"],
+["recording_url","Recording"]
+],
+fields:[
+["lead_id","Lead","lead"],
+["closer_id","Closer","profile"],
+["duration_seconds","Duration seconds","number"],
+["status","Status","select",false,["Answered","No Answer","Dropped","Completed"]],
+["disposition","Disposition","text"],
+["recording_url","Recording URL","text"],
+["notes","Notes","textarea"]
+]
+},
 
-const message = document.getElementById("message");
-const statusBox = document.getElementById("status");
+buyers:{
+title:"Buyers",
+table:"buyers",
+columns:[
+["company_name","Buyer"],
+["contact_name","Contact"],
+["email","Email"],
+["phone","Phone"],
+["payment_terms","Terms"],
+["status","Status"]
+],
+fields:[
+["company_name","Company name","text",true],
+["contact_name","Contact name","text"],
+["email","Email","email"],
+["phone","Phone","text"],
+["payment_terms","Payment terms","text"],
+["status","Status","select",false,["Active","Inactive","Paused"]],
+["notes","Notes","textarea"]
+]
+},
 
-const userInfo = document.getElementById("userInfo");
-const pageTitle = document.getElementById("pageTitle");
-const content = document.getElementById("content");
-const nav = document.getElementById("nav");
+carriers:{
+title:"Carriers",
+table:"carriers",
+columns:[
+["name","Carrier"],
+["status","Status"],
+["notes","Notes"]
+],
+fields:[
+["name","Carrier name","text",true],
+["status","Status","select",false,["Active","Inactive"]],
+["notes","Notes","textarea"]
+]
+},
 
+campaigns:{
+title:"Campaigns",
+table:"campaigns",
+columns:[
+["name","Campaign"],
+["campaign_type","Type"],
+["states","States"],
+["status","Status"]
+],
+fields:[
+["name","Campaign name","text",true],
+["campaign_type","Campaign type","text",true],
+["buyer_id","Buyer","buyer"],
+["states","States","text"],
+["status","Status","select",false,["Active","Paused","Inactive"]]
+]
+},
 
-/*
-====================================================
-STATE
-====================================================
-*/
+agreements:{
+title:"Agreements",
+table:"agreements",
+columns:[
+["name","Agreement"],
+["version","Version"],
+["effective_from","Effective"],
+["effective_to","End"],
+["level_under_3","Level <3"],
+["level_over_3","Level >3"],
+["gi_payout","GI"],
+["first_premium_required","First premium"]
+],
+fields:[
+["buyer_id","Buyer","buyer"],
+["name","Agreement name","text",true],
+["version","Version","number"],
+["effective_from","Effective from","date",true],
+["effective_to","Effective to","date"],
+["level_under_3","Level <3 payout","number"],
+["level_over_3","Level >3 payout","number"],
+["gi_payout","GI payout","number"],
+["first_premium_required","First premium required","boolean"],
+["terms","Terms JSON","textarea"],
+["notes","Notes","textarea"]
+]
+},
 
-let db = null;
-let currentUser = null;
-let currentPage = "dashboard";
+commissions:{
+title:"Commissions",
+table:"commissions",
+columns:[
+["policy_id","Policy"],
+["amount","Amount"],
+["status","Status"],
+["due_date","Due"],
+["paid_date","Paid"]
+],
+fields:[
+["policy_id","Policy","policy",true],
+["amount","Amount","number",true],
+["status","Status","select",false,["Pending","Payable","Paid","Chargeback"]],
+["due_date","Due date","date"],
+["paid_date","Paid date","date"],
+["notes","Notes","textarea"]
+]
+},
 
+payments:{
+title:"Payments",
+table:"payments",
+columns:[
+["payment_date","Date"],
+["payment_type","Type"],
+["amount_usd","USD"],
+["amount_pkr","PKR"],
+["status","Status"],
+["reference","Reference"]
+],
+fields:[
+["buyer_id","Buyer","buyer"],
+["policy_id","Policy","policy"],
+["payment_type","Payment type","select",false,["Commission","Lead","Transfer","Other"]],
+["amount_usd","Amount USD","number"],
+["exchange_rate","Exchange rate","number"],
+["amount_pkr","Amount PKR","number"],
+["status","Status","select",false,["Pending","Paid","Failed"]],
+["payment_date","Payment date","date"],
+["reference","Reference","text"],
+["notes","Notes","textarea"]
+]
+},
 
-/*
-====================================================
-HELPERS
-====================================================
-*/
+team_payouts:{
+title:"Team Payouts",
+table:"team_payouts",
+columns:[
+["policy_id","Policy"],
+["team_member_id","Member"],
+["cost_usd","USD"],
+["cost_pkr","PKR"],
+["status","Status"],
+["payment_date","Date"]
+],
+fields:[
+["policy_id","Policy","policy"],
+["team_member_id","Team member","profile"],
+["cost_usd","Cost USD","number"],
+["exchange_rate","Exchange rate","number"],
+["cost_pkr","Cost PKR","number"],
+["status","Status","select",false,["Pending","Paid","Cancelled"]],
+["payment_date","Payment date","date"],
+["notes","Notes","textarea"]
+]
+},
 
-function setStatus(text, type="normal"){
+chargebacks:{
+title:"Chargebacks",
+table:"chargebacks",
+columns:[
+["policy_id","Policy"],
+["amount_usd","Amount"],
+["reason","Reason"],
+["status","Status"],
+["chargeback_date","Date"],
+["recovered_date","Recovered"]
+],
+fields:[
+["policy_id","Policy","policy"],
+["amount_usd","Amount USD","number",true],
+["reason","Reason","text"],
+["status","Status","select",false,["Pending","Recovered","Disputed","Written Off"]],
+["chargeback_date","Chargeback date","date"],
+["recovered_date","Recovered date","date"],
+["notes","Notes","textarea"]
+]
+},
 
-statusBox.textContent = text;
-
-statusBox.className = "status";
-
-if(type === "error"){
-statusBox.classList.add("error");
+teams:{
+title:"Teams",
+table:"teams",
+columns:[
+["name","Team"],
+["active","Active"],
+["created_at","Created"]
+],
+fields:[
+["name","Team name","text",true],
+["active","Active","boolean"]
+]
 }
 
-if(type === "success"){
-statusBox.classList.add("success");
+};
+
+
+/* ---------- Utility ---------- */
+
+function esc(v){
+return String(v??"")
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#39;");
 }
 
+function setStatus(text,error=false){
+$("status").textContent=text;
+$("status").className="status "+(error?"error":"");
 }
 
-
-function setMessage(text, type="error"){
-
-message.textContent = text;
-
-message.className = "msg";
-
-if(type === "success"){
-message.classList.add("success");
-}else{
-message.classList.add("error");
+function msg(text,error=true){
+$("msg").textContent=text;
+$("msg").className="msg "+(error?"error":"success");
 }
 
+function clearMsg(){
+$("msg").textContent="";
+$("msg").className="msg";
 }
 
+async function waitForSupabase(){
 
-function clearMessage(){
-message.textContent="";
-message.className="msg";
-}
+for(let i=0;i<100;i++){
 
-
-/*
-====================================================
-WAIT FOR SUPABASE
-====================================================
-*/
-
-function waitForSupabase(){
-
-return new Promise((resolve,reject)=>{
-
-let attempts=0;
-
-const timer=setInterval(()=>{
-
-attempts++;
-
-if(
-window.supabase &&
-typeof window.supabase.createClient === "function"
-){
-
-clearInterval(timer);
-
-try{
+if(window.supabase&&window.supabase.createClient){
 
 db=window.supabase.createClient(
 SUPABASE_URL,
 SUPABASE_KEY
 );
 
-resolve(db);
-
-}catch(error){
-
-clearInterval(timer);
-reject(error);
-
-}
-
 return;
-}
-
-if(attempts>=100){
-
-clearInterval(timer);
-
-reject(
-new Error(
-"Supabase library could not be loaded. Check your internet connection or CDN access."
-)
-);
 
 }
 
-},100);
+await new Promise(r=>setTimeout(r,100));
 
-});
+}
+
+throw new Error("Supabase library could not be loaded.");
 
 }
 
 
-/*
-====================================================
-SHOW LOGIN
-====================================================
-*/
+/* ---------- Authentication ---------- */
 
-function showLogin(){
+async function loadProfile(){
 
-loginPage.classList.remove("hidden");
-app.classList.add("hidden");
+const r=await db
+.from("profiles")
+.select("id,email,full_name,role,active,team_id")
+.eq("id",user.id)
+.maybeSingle();
 
+if(r.error)throw r.error;
+
+profile=r.data;
+
+if(!profile){
+throw new Error("No CRM profile exists for this account.");
 }
 
-
-/*
-====================================================
-SHOW APP
-====================================================
-*/
-
-function showApp(){
-
-loginPage.classList.add("hidden");
-app.classList.remove("hidden");
-
-if(currentUser){
-
-userInfo.textContent =
-currentUser.email || "Authenticated user";
-
+if(profile.active===false){
+throw new Error("Your CRM account is inactive.");
 }
 
 }
 
+function isAdmin(){
+const r=String(profile?.role||"").toLowerCase();
+return r==="owner"||r==="admin";
+}
 
-/*
-====================================================
-LOGIN
-====================================================
-*/
+function isViewer(){
+return String(profile?.role||"").toLowerCase()==="viewer";
+}
 
 async function login(){
 
-clearMessage();
+clearMsg();
 
-const email=emailInput.value.trim();
-const password=passwordInput.value;
+const email=$("email").value.trim();
+const password=$("password").value;
 
-if(!email){
-
-setMessage("Enter your email.");
+if(!email||!password){
+msg("Enter your email and password.");
 return;
-
 }
 
-if(!password){
-
-setMessage("Enter your password.");
-return;
-
-}
-
-if(!db){
-
-setMessage(
-"CRM is still initializing. Please wait for the status above."
-);
-
-return;
-
-}
-
-loginBtn.disabled=true;
-loginBtn.textContent="Signing in...";
-
-setStatus("Connecting to Supabase...");
+$("loginBtn").disabled=true;
+$("loginBtn").textContent="Signing in...";
+setStatus("Authenticating...");
 
 try{
 
-const result =
-await db.auth.signInWithPassword({
-email:email,
-password:password
+const r=await db.auth.signInWithPassword({
+email,
+password
 });
 
-if(result.error){
+if(r.error)throw r.error;
 
-throw result.error;
+user=r.data.user;
 
-}
+await loadProfile();
 
-if(!result.data || !result.data.user){
+$("login").classList.add("hidden");
+$("app").classList.remove("hidden");
 
-throw new Error(
-"Supabase accepted the request but returned no user."
-);
+$("who").textContent=
+`${profile.full_name||user.email} | ${profile.role}`;
 
-}
+setStatus("CRM connected.","success");
 
-currentUser=result.data.user;
+go("dashboard");
 
-setStatus(
-"Authentication successful.",
-"success"
-);
+}catch(e){
 
-setMessage(
-"Signed in successfully.",
-"success"
-);
-
-showApp();
-
-renderDashboard();
-
-}catch(error){
-
-console.error("LOGIN ERROR:",error);
-
-setMessage(
-error?.message ||
-"Sign in failed."
-);
-
-setStatus(
-"Authentication failed: "+
-(error?.message || "Unknown error"),
-"error"
-);
+console.error(e);
+msg(e.message||"Sign in failed.");
+setStatus("Authentication failed.",true);
 
 }finally{
 
-loginBtn.disabled=false;
-loginBtn.textContent="Sign in";
+$("loginBtn").disabled=false;
+$("loginBtn").textContent="Sign in";
 
 }
 
 }
 
-
-/*
-====================================================
-FORGOT PASSWORD
-====================================================
-*/
+async function logout(){
+await db.auth.signOut();
+location.reload();
+}
 
 async function forgotPassword(){
 
-clearMessage();
+clearMsg();
 
-const email=emailInput.value.trim();
+const email=$("email").value.trim();
 
 if(!email){
-
-setMessage(
-"Enter your email first, then click Forgot password."
-);
-
+msg("Enter your email first.");
 return;
-
 }
-
-if(!db){
-
-setMessage(
-"CRM has not finished connecting to Supabase."
-);
-
-return;
-
-}
-
-forgotBtn.disabled=true;
-forgotBtn.textContent="Sending...";
 
 try{
 
-const result =
-await db.auth.resetPasswordForEmail(
-email,
-{
-redirectTo:
-"https://alphanationcrm09.github.io/alpha-nation-crm/"
-}
-);
-
-if(result.error){
-
-throw result.error;
-
-}
-
-setMessage(
-"Password reset instructions have been sent to your email.",
-"success"
-);
-
-}catch(error){
-
-console.error("RESET ERROR:",error);
-
-setMessage(
-error?.message ||
-"Could not send password reset email."
-);
-
-}finally{
-
-forgotBtn.disabled=false;
-forgotBtn.textContent="Forgot password?";
-
-}
-
-}
-
-
-/*
-====================================================
-LOGOUT
-====================================================
-*/
-
-async function logout(){
-
-if(db){
-
-await db.auth.signOut();
-
-}
-
-currentUser=null;
-
-showLogin();
-
-setStatus(
-"Signed out."
-);
-
-clearMessage();
-
-}
-
-
-/*
-====================================================
-DASHBOARD
-====================================================
-*/
-
-function renderDashboard(){
-
-currentPage="dashboard";
-
-pageTitle.textContent="Dashboard";
-
-nav.querySelectorAll("button").forEach(button=>{
-
-button.classList.toggle(
-"active",
-button.dataset.page==="dashboard"
-);
-
+const r=await db.auth.resetPasswordForEmail(email,{
+redirectTo:"https://alphanationcrm09.github.io/alpha-nation-crm/"
 });
 
-content.innerHTML=`
+if(r.error)throw r.error;
+
+msg("Password reset instructions were sent to your email.",false);
+
+}catch(e){
+msg(e.message||"Unable to send reset email.");
+}
+
+}
+
+
+/* ---------- Data ---------- */
+
+async function fetchRows(table){
+
+let q=db.from(table).select("*");
+
+if(profile?.team_id&&table!=="teams"&&!isAdmin()){
+
+q=q.eq("team_id",profile.team_id);
+
+}
+
+const r=await q
+.order("created_at",{ascending:false})
+.limit(500);
+
+if(r.error)throw r.error;
+
+return r.data||[];
+
+}
+
+async function lookup(table){
+
+const r=await db.from(table).select("*").limit(1000);
+
+if(r.error)return[];
+
+return r.data||[];
+
+}
+
+async function relationData(type){
+
+if(type==="buyer")return lookup("buyers");
+if(type==="carrier")return lookup("carriers");
+if(type==="campaign")return lookup("campaigns");
+if(type==="agreement")return lookup("agreements");
+if(type==="lead")return lookup("leads");
+if(type==="policy")return lookup("policies");
+if(type==="profile")return lookup("profiles");
+
+return[];
+
+}
+
+
+/* ---------- Dashboard ---------- */
+
+async function dashboard(){
+
+const tables=[
+"leads",
+"applications",
+"policies",
+"calls",
+"buyers",
+"chargebacks"
+];
+
+const counts={};
+
+for(const t of tables){
+
+let q=db.from(t).select("id",{count:"exact",head:true});
+
+if(profile?.team_id&&!isAdmin()&&t!=="buyers"){
+q=q.eq("team_id",profile.team_id);
+}
+
+const r=await q;
+
+counts[t]=r.count||0;
+
+}
+
+$("content").innerHTML=`
 
 <div class="grid">
 
 <div class="card">
-<div class="muted">CRM Status</div>
-<div class="num">Online</div>
+<div class="muted">Leads</div>
+<div class="num">${counts.leads}</div>
 </div>
 
 <div class="card">
-<div class="muted">Authentication</div>
-<div class="num">Active</div>
+<div class="muted">Applications</div>
+<div class="num">${counts.applications}</div>
 </div>
 
 <div class="card">
-<div class="muted">User</div>
-<div class="num">Logged In</div>
+<div class="muted">Policies</div>
+<div class="num">${counts.policies}</div>
 </div>
 
 <div class="card">
-<div class="muted">System</div>
-<div class="num">Ready</div>
+<div class="muted">Calls</div>
+<div class="num">${counts.calls}</div>
+</div>
+
+<div class="card">
+<div class="muted">Buyers</div>
+<div class="num">${counts.buyers}</div>
+</div>
+
+<div class="card">
+<div class="muted">Chargebacks</div>
+<div class="num">${counts.chargebacks}</div>
 </div>
 
 </div>
 
 <div class="panel">
-
 <div class="body">
-
 <h3>Alpha Nation CRM</h3>
-
 <p class="muted">
-You are successfully authenticated.
+Logged in as ${esc(profile?.full_name||user.email)}
 </p>
-
 <p>
-Logged in as:
-<strong>${escapeHtml(currentUser?.email || "")}</strong>
+Role: <span class="badge">${esc(profile?.role)}</span>
 </p>
-
 </div>
-
 </div>
 
 `;
@@ -821,298 +762,129 @@ Logged in as:
 }
 
 
-/*
-====================================================
-PLACEHOLDER PAGES
-====================================================
-*/
+/* ---------- Tables ---------- */
 
-const pages={
+async function renderTable(){
 
-policies:"Policies",
-applications:"Applications",
-leads:"Leads",
-calls:"Calls",
-buyers:"Buyers",
-carriers:"Carriers",
-agreements:"Agreements",
-payments:"Payments",
-chargebacks:"Chargebacks",
-teams:"Team Management"
+const cfg=pageConfig[currentPage];
 
-};
+if(!cfg)return;
 
-
-function openPage(page){
-
-if(page==="dashboard"){
-
-renderDashboard();
-return;
-
-}
-
-currentPage=page;
-
-pageTitle.textContent=pages[page] || page;
-
-nav.querySelectorAll("button").forEach(button=>{
-
-button.classList.toggle(
-"active",
-button.dataset.page===page
-);
-
-});
-
-content.innerHTML=`
-
-<div class="panel">
-
-<div class="body">
-
-<h2>${escapeHtml(pages[page] || page)}</h2>
-
-<p class="muted">
-The authentication system is working. This CRM module is ready for the database records to be connected.
-</p>
-
-</div>
-
-</div>
-
-`;
-
-}
-
-
-/*
-====================================================
-ESCAPE HTML
-====================================================
-*/
-
-function escapeHtml(value){
-
-return String(value ?? "")
-.replaceAll("&","&amp;")
-.replaceAll("<","&lt;")
-.replaceAll(">","&gt;")
-.replaceAll('"',"&quot;")
-.replaceAll("'","&#39;");
-
-}
-
-
-/*
-====================================================
-NAVIGATION
-====================================================
-*/
-
-nav.addEventListener("click",(event)=>{
-
-const button=
-event.target.closest("button[data-page]");
-
-if(!button)return;
-
-openPage(button.dataset.page);
-
-});
-
-
-/*
-====================================================
-AUTH SESSION CHECK
-====================================================
-*/
-
-async function checkSession(){
-
-if(!db){
-
-throw new Error(
-"Supabase client is not initialized."
-);
-
-}
-
-setStatus(
-"Checking existing CRM session..."
-);
-
-const result=await db.auth.getSession();
-
-if(result.error){
-
-throw result.error;
-
-}
-
-const session=result.data?.session;
-
-if(session?.user){
-
-currentUser=session.user;
-
-showApp();
-
-renderDashboard();
-
-setStatus(
-"Existing session restored.",
-"success"
-);
-
-}else{
-
-showLogin();
-
-setStatus(
-"CRM ready. Enter your email and password.",
-"success"
-);
-
-}
-
-}
-
-
-/*
-====================================================
-AUTH STATE LISTENER
-====================================================
-*/
-
-function setupAuthListener(){
-
-if(!db)return;
-
-db.auth.onAuthStateChange(
-(event,session)=>{
-
-console.log(
-"Supabase Auth:",
-event
-);
-
-if(event==="SIGNED_IN" && session?.user){
-
-currentUser=session.user;
-
-showApp();
-
-renderDashboard();
-
-}
-
-if(event==="SIGNED_OUT"){
-
-currentUser=null;
-
-showLogin();
-
-}
-
-}
-);
-
-}
-
-
-/*
-====================================================
-BUTTON EVENTS
-====================================================
-*/
-
-loginBtn.addEventListener(
-"click",
-login
-);
-
-forgotBtn.addEventListener(
-"click",
-forgotPassword
-);
-
-logoutBtn.addEventListener(
-"click",
-logout
-);
-
-passwordInput.addEventListener(
-"keydown",
-event=>{
-
-if(event.key==="Enter"){
-
-login();
-
-}
-
-}
-);
-
-
-/*
-====================================================
-START CRM
-====================================================
-*/
-
-async function startCRM(){
+setStatus(`Loading ${cfg.title}...`);
 
 try{
 
-setStatus(
-"Loading Supabase..."
-);
+currentRows=await fetchRows(cfg.table);
 
-await waitForSupabase();
+let html=`
 
-setStatus(
-"Supabase library loaded.",
-"success"
-);
+<div class="panel">
 
-await checkSession();
+<div class="ph">
 
-setupAuthListener();
+<b>${cfg.title}</b>
 
-}catch(error){
+<button class="btn" onclick="openForm()">
++ Add ${cfg.title.slice(0,-1)||"Record"}
+</button>
 
-console.error(
-"CRM START ERROR:",
-error
-);
+</div>
 
-setStatus(
-"CRM initialization failed: "+
-(error?.message || "Unknown error"),
-"error"
-);
+<div class="body">
 
-setMessage(
-"Initialization error: "+
-(error?.message || "Unknown error")
-);
+<div class="toolbar">
+
+<input
+id="search"
+placeholder="Search ${cfg.title}..."
+oninput="filterTable()">
+
+</div>
+
+<div id="tableArea">
+${buildTable(currentRows)}
+</div>
+
+</div>
+</div>
+`;
+
+$("content").innerHTML=html;
+
+setStatus(`${currentRows.length} records loaded.`);
+
+}catch(e){
+
+$("content").innerHTML=`
+<div class="panel">
+<div class="body error">${esc(e.message)}</div>
+</div>`;
+
+setStatus("Database error.",true);
 
 }
 
 }
 
+function buildTable(rows){
 
-/*
-====================================================
-START
-====================================================
-*/
+const cfg=pageConfig[currentPage];
 
-startCRM();
+if(!rows.length){
 
-</script>
+return `<p class="muted">No records found. Click + Add to create one.</p>`;
 
-</body>
-</html>
+}
+
+let html="<table><thead><tr>";
+
+for(const c of cfg.columns){
+html+=`<th>${esc(c[1])}</th>`;
+}
+
+html+="<th>Actions</th></tr></thead><tbody>";
+
+for(const row of rows){
+
+html+="<tr>";
+
+for(const c of cfg.columns){
+
+let value=row[c[0]];
+
+if(typeof value==="boolean"){
+value=value?"Yes":"No";
+}
+
+if(value&&String(value).length>35){
+value=String(value).slice(0,35)+"...";
+}
+
+html+=`<td>${esc(value)}</td>`;
+
+}
+
+html+=`
+
+<td>
+
+<div class="actions">
+
+<button class="btn dark"
+onclick="openForm('${row.id}')">
+Edit
+</button>
+
+<button class="btn red"
+onclick="removeRecord('${row.id}')">
+Delete
+</button>
+
+</div>
+
+</td>
+</tr>`;
+
+}
+
+html+="</tbody></
