@@ -12,17 +12,18 @@ body{margin:0;background:#080808;color:#f5f5f5;font:14px system-ui,Arial}
 .box{width:min(430px,100%);background:#111;border:1px solid #292929;border-radius:14px;padding:25px}
 .brand{font-size:21px;font-weight:900;letter-spacing:.5px}
 .muted{color:#999}
-label{display:block;color:#aaa;font-size:12px;margin-top:11px}
+label{display:block;color:#aaa;font-size:12px;margin-top:12px}
 input,select,textarea{width:100%;background:#090909;color:#fff;border:1px solid #333;border-radius:7px;padding:10px;margin-top:5px}
 textarea{min-height:90px;resize:vertical}
 .btn{background:#eee;color:#111;border:0;border-radius:7px;padding:10px 14px;font-weight:700;margin-top:12px;cursor:pointer}
 .btn.dark{background:#191919;color:#fff;border:1px solid #333}
 .btn.red{background:#8b2020;color:#fff}
 .btn:disabled{opacity:.5}
-.msg{margin-top:12px;line-height:1.5}
+.link{background:none;border:0;color:#aaa;cursor:pointer;padding:8px 0}
+.msg{margin-top:12px}
 .error{color:#ff7777}
 .success{color:#7ee787}
-.status{margin-top:12px;padding:9px;border:1px solid #292929;border-radius:7px;color:#999;font-size:12px;word-break:break-word}
+.status{margin-top:12px;padding:9px;border:1px solid #292929;border-radius:7px;color:#999;font-size:12px}
 aside{position:fixed;inset:0 auto 0 0;width:225px;background:#101010;border-right:1px solid #292929;padding:18px 12px;overflow:auto}
 nav button{display:block;width:100%;padding:10px;background:none;border:0;color:#aaa;text-align:left;border-radius:7px;margin:3px 0;cursor:pointer}
 nav button:hover,nav button.active{background:#222;color:#fff}
@@ -31,7 +32,8 @@ main{margin-left:225px;padding:24px;max-width:1700px}
 .top h1{margin:0}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .card,.panel{background:#111;border:1px solid #292929;border-radius:10px}
-.card{padding:16px}.num{font-size:24px;font-weight:800;margin-top:6px}
+.card{padding:16px}
+.num{font-size:24px;font-weight:800;margin-top:6px}
 .panel{margin-top:18px;overflow:auto}
 .ph{padding:14px 16px;border-bottom:1px solid #292929;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .body{padding:16px}
@@ -41,14 +43,13 @@ table{width:100%;border-collapse:collapse}
 th,td{text-align:left;padding:9px;border-bottom:1px solid #292929;white-space:nowrap}
 th{font-size:11px;color:#999}
 .actions{display:flex;gap:5px}
-.actions .btn{margin:0;padding:6px 9px;font-size:12px}
+.actions button{margin:0;padding:6px 9px;font-size:12px}
 .modal{position:fixed;inset:0;background:#000c;display:grid;place-items:center;padding:15px;z-index:50}
 .modalbox{width:min(1000px,100%);max-height:92vh;overflow:auto;background:#121212;border:1px solid #333;border-radius:12px;padding:20px}
 .form{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .wide{grid-column:1/-1}
-.formActions{display:flex;gap:8px;justify-content:flex-end}
+.formActions{display:flex;justify-content:flex-end;gap:8px}
 .badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#222;font-size:11px}
-.link{background:none;border:0;color:#aaa;cursor:pointer;padding:9px 0}
 @media(max-width:850px){
 aside{width:60px}
 aside .brand{font-size:0}
@@ -106,6 +107,633 @@ main{margin-left:60px;padding:14px}
 <button data-page="team_payouts">Team Payouts</button>
 <button data-page="chargebacks">Chargebacks</button>
 <button data-page="teams">Teams</button>
+<button data-page="account">My Account</button>
+</nav>
+
+<button id="logout" class="btn dark">Sign out</button>
+</aside>
+
+<main>
+<div class="top">
+<div>
+<h1 id="title">Dashboard</h1>
+<div id="who" class="muted"></div>
+</div>
+<button id="addBtn" class="btn">+ Add</button>
+</div>
+
+<section id="content"></section>
+</main>
+</div>
+
+<div id="modal" class="modal hidden">
+<div class="modalbox">
+<div class="ph">
+<b id="modalTitle">Record</b>
+<button id="close" class="btn dark">Close</button>
+</div>
+<form id="form" class="form"></form>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+"use strict";
+
+const SUPABASE_URL="https://yzhtisfmlowkcvavgsxd.supabase.co";
+const SUPABASE_KEY="sb_publishable_GIhI_6sDVvzggGR1nVvEBg_psCt4iQu";
+
+let db;
+let user;
+let profile;
+let page="dashboard";
+let rows=[];
+let editing=null;
+
+const $=id=>document.getElementById(id);
+
+const CONFIG={
+
+policies:{
+title:"Policies",table:"policies",
+cols:[
+["customer_name","Customer"],["state","State"],["product","Product"],
+["plan_type","Level/GI"],["premium","Premium"],["coverage_amount","Coverage"],
+["policy_number","Policy"],["approval_status","Approval"],
+["first_draft_status","Draft"],["commission_status","Payout"],
+["agreed_payout","Payout"],["chargeback_amount","Chargeback"]
+],
+fields:[
+["customer_name","Customer","text",1],
+["state","State","text"],["carrier_id","Carrier","carrier"],
+["buyer_id","Buyer","buyer"],["campaign_id","Campaign","campaign"],
+["agent_id","Agent","profile"],["product","Product","text"],
+["plan_type","Level/GI","select",0,["Level","GI"]],
+["coverage_amount","Coverage","number"],["premium","Premium","number"],
+["policy_number","Policy number","text"],["effective_date","Effective date","date"],
+["approval_status","Approval","text"],["first_draft_date","First draft","date"],
+["first_draft_status","Draft status","text"],
+["first_premium_amount","First premium","number"],
+["commission_status","Commission status","text"],
+["agreed_payout","Agreed payout","number"],
+["agreement_id","Agreement","agreement"],
+["agreement_version","Agreement version","number"],
+["commission_amount","Commission amount","number"],
+["chargeback_amount","Chargeback amount","number"],
+["retention_status","Retention status","text"],
+["retention_month","Retention month","number"],
+["notes","Notes","textarea"]
+]},
+
+applications:{
+title:"Applications",table:"applications",
+cols:[
+["customer_name","Customer"],["product","Product"],["plan_type","Level/GI"],
+["premium","Premium"],["coverage_amount","Coverage"],
+["application_number","Application"],["status","Status"],
+["underwriting_status","Underwriting"]
+],
+fields:[
+["lead_id","Lead","lead"],["customer_name","Customer","text",1],
+["carrier_id","Carrier","carrier"],["product","Product","text"],
+["product_type","Product type","text"],["plan_type","Level/GI","text"],
+["coverage_amount","Coverage","number"],["premium","Premium","number"],
+["application_number","Application number","text"],
+["status","Status","text",1],["underwriting_status","Underwriting","text"],
+["agent_id","Agent","profile"]
+]},
+
+leads:{
+title:"Leads",table:"leads",
+cols:[
+["lead_id","Lead ID"],["customer_name","Customer"],["phone","Phone"],
+["state","State"],["dob","DOB"],["source","Source"],["call_status","Status"]
+],
+fields:[
+["lead_id","Lead ID","text"],["customer_name","Customer","text",1],
+["phone","Phone","text",1],["state","State","text"],
+["dob","DOB","date"],["source","Source","text"],
+["campaign_id","Campaign","campaign"],["closer_id","Closer","profile"],
+["call_status","Call status","text",1],["notes","Notes","textarea"]
+]},
+
+calls:{
+title:"Calls",table:"calls",
+cols:[
+["called_at","Date"],["status","Status"],["disposition","Disposition"],
+["duration_seconds","Seconds"],["recording_url","Recording"]
+],
+fields:[
+["lead_id","Lead","lead"],["closer_id","Closer","profile"],
+["duration_seconds","Duration seconds","number"],["status","Status","text"],
+["disposition","Disposition","text"],["recording_url","Recording URL","text"],
+["notes","Notes","textarea"]
+]},
+
+buyers:{
+title:"Buyers",table:"buyers",
+cols:[
+["company_name","Buyer"],["contact_name","Contact"],["email","Email"],
+["phone","Phone"],["payment_terms","Terms"],["status","Status"]
+],
+fields:[
+["company_name","Company name","text",1],["contact_name","Contact name","text"],
+["email","Email","email"],["phone","Phone","text"],
+["payment_terms","Payment terms","text"],["status","Status","text",1],
+["notes","Notes","textarea"]
+]},
+
+carriers:{
+title:"Carriers",table:"carriers",
+cols:[["name","Carrier"],["status","Status"],["notes","Notes"]],
+fields:[
+["name","Carrier name","text",1],["status","Status","text",1],
+["notes","Notes","textarea"]
+]},
+
+campaigns:{
+title:"Campaigns",table:"campaigns",
+cols:[["name","Campaign"],["campaign_type","Type"],["buyer_id","Buyer"],["states","States"],["status","Status"]],
+fields:[
+["name","Campaign name","text",1],["campaign_type","Campaign type","text",1],
+["buyer_id","Buyer","buyer"],["states","States","text"],
+["status","Status","text",1]
+]},
+
+agreements:{
+title:"Agreements",table:"agreements",
+cols:[
+["name","Agreement"],["version","Version"],["effective_from","Effective"],
+["effective_to","End"],["level_under_3","Level <3"],
+["level_over_3","Level >3"],["gi_payout","GI"]
+],
+fields:[
+["buyer_id","Buyer","buyer"],["name","Agreement name","text",1],
+["version","Version","number",1],["effective_from","Effective from","date",1],
+["effective_to","Effective to","date"],["level_under_3","Level <3","number"],
+["level_over_3","Level >3","number"],["gi_payout","GI payout","number"],
+["first_premium_required","First premium required","boolean",1],
+["terms","Terms JSON","textarea",1],["notes","Notes","textarea"]
+]},
+
+commissions:{
+title:"Commissions",table:"commissions",
+cols:[["policy_id","Policy"],["amount","Amount"],["status","Status"],["due_date","Due"],["paid_date","Paid"]],
+fields:[
+["policy_id","Policy","policy",1],["amount","Amount","number",1],
+["status","Status","text",1],["due_date","Due date","date"],
+["paid_date","Paid date","date"],["notes","Notes","textarea"]
+]},
+
+payments:{
+title:"Payments",table:"payments",
+cols:[
+["payment_date","Date"],["payment_type","Type"],["amount_usd","USD"],
+["amount_pkr","PKR"],["status","Status"],["reference","Reference"]
+],
+fields:[
+["buyer_id","Buyer","buyer"],["policy_id","Policy","policy"],
+["payment_type","Payment type","text",1],["amount_usd","Amount USD","number",1],
+["exchange_rate","Exchange rate","number"],["amount_pkr","Amount PKR","number"],
+["status","Status","text",1],["payment_date","Payment date","date"],
+["reference","Reference","text"],["notes","Notes","textarea"]
+]},
+
+team_payouts:{
+title:"Team Payouts",table:"team_payouts",
+cols:[
+["policy_id","Policy"],["team_member_id","Member"],
+["cost_usd","USD"],["cost_pkr","PKR"],["status","Status"],["payment_date","Date"]
+],
+fields:[
+["policy_id","Policy","policy"],["team_member_id","Team member","profile"],
+["cost_usd","Cost USD","number",1],["exchange_rate","Exchange rate","number"],
+["cost_pkr","Cost PKR","number"],["status","Status","text",1],
+["payment_date","Payment date","date"],["notes","Notes","textarea"]
+]},
+
+chargebacks:{
+title:"Chargebacks",table:"chargebacks",
+cols:[
+["policy_id","Policy"],["amount_usd","Amount"],["reason","Reason"],
+["status","Status"],["chargeback_date","Date"],["recovered_date","Recovered"]
+],
+fields:[
+["policy_id","Policy","policy"],["amount_usd","Amount USD","number",1],
+["reason","Reason","text"],["status","Status","text",1],
+["chargeback_date","Chargeback date","date"],
+["recovered_date","Recovered date","date"],["notes","Notes","textarea"]
+]},
+
+teams:{
+title:"Teams",table:"teams",
+cols:[["name","Team"],["active","Active"],["created_at","Created"]],
+fields:[
+["name","Team name","text",1],["active","Active","boolean",1]
+]}
+
+};
+
+function esc(v){
+return String(v??"")
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#39;");
+}
+
+function status(text,error=false){
+$("status").textContent=text;
+$("status").className="status "+(error?"error":"");
+}
+
+function message(text,error=true){
+$("msg").textContent=text;
+$("msg").className="msg "+(error?"error":"success");
+}
+
+function clearMessage(){
+$("msg").textContent="";
+$("msg").className="msg";
+}
+
+function admin(){
+return ["owner","admin"].includes(String(profile?.role||"").toLowerCase());
+}
+
+async function profileLoad(){
+const r=await db.from("profiles")
+.select("id,email,full_name,role,active,team_id")
+.eq("id",user.id).maybeSingle();
+
+if(r.error)throw r.error;
+if(!r.data)throw new Error("No CRM profile exists for this account.");
+if(r.data.active===false)throw new Error("Your CRM account is inactive.");
+
+profile=r.data;
+}
+
+async function login(){
+
+clearMessage();
+
+const email=$("email").value.trim();
+const password=$("password").value;
+
+if(!email||!password){
+message("Enter email and password.");
+return;
+}
+
+$("loginBtn").disabled=true;
+$("loginBtn").textContent="Signing in...";
+status("Authenticating...");
+
+try{
+
+const r=await db.auth.signInWithPassword({email,password});
+
+if(r.error)throw r.error;
+
+user=r.data.user;
+
+await profileLoad();
+
+$("login").classList.add("hidden");
+$("app").classList.remove("hidden");
+
+$("who").textContent=
+`${profile.full_name||user.email} | ${profile.role}`;
+
+status("CRM connected.");
+
+await go("dashboard");
+
+}catch(e){
+
+message(e.message||"Sign in failed.");
+status("Authentication failed.",true);
+
+}finally{
+
+$("loginBtn").disabled=false;
+$("loginBtn").textContent="Sign in";
+
+}
+
+}
+
+async function forgot(){
+
+clearMessage();
+
+const email=$("email").value.trim();
+
+if(!email){
+message("Enter your email first.");
+return;
+}
+
+try{
+
+const r=await db.auth.resetPasswordForEmail(email,{
+redirectTo:"https://alphanationcrm09.github.io/alpha-nation-crm/"
+});
+
+if(r.error)throw r.error;
+
+message("Password reset instructions have been sent.",false);
+
+}catch(e){
+
+message(e.message||"Could not send reset email.");
+
+}
+
+}
+
+async function changePassword(){
+
+const form=$("form");
+
+form.innerHTML=`
+<div>
+<label>New password
+<input name="new_password" type="password" minlength="6" required>
+</label>
+</div>
+
+<div>
+<label>Confirm new password
+<input name="confirm_password" type="password" minlength="6" required>
+</label>
+</div>
+
+<div class="wide formActions">
+<button type="button" class="btn dark" onclick="closeModal()">Cancel</button>
+<button class="btn">Update Password</button>
+</div>
+`;
+
+$("modalTitle").textContent="Change Password";
+$("modal").classList.remove("hidden");
+
+form.onsubmit=async e=>{
+
+e.preventDefault();
+
+const fd=new FormData(form);
+const a=fd.get("new_password");
+const b=fd.get("confirm_password");
+
+if(a.length<6){
+alert("Password must contain at least 6 characters.");
+return;
+}
+
+if(a!==b){
+alert("Passwords do not match.");
+return;
+}
+
+const r=await db.auth.updateUser({password:a});
+
+if(r.error){
+alert(r.error.message);
+return;
+}
+
+closeModal();
+alert("Password changed successfully.");
+
+};
+
+}
+
+async function lookup(table){
+
+const r=await db.from(table).select("*").limit(1000);
+
+return r.error?[]:(r.data||[]);
+
+}
+
+async function relation(type){
+
+if(type==="buyer")return lookup("buyers");
+if(type==="carrier")return lookup("carriers");
+if(type==="campaign")return lookup("campaigns");
+if(type==="agreement")return lookup("agreements");
+if(type==="lead")return lookup("leads");
+if(type==="policy")return lookup("policies");
+if(type==="profile")return lookup("profiles");
+
+return[];
+
+}
+
+async function getRows(table){
+
+let q=db.from(table).select("*");
+
+if(profile.team_id&&!admin()&&table!=="teams"){
+q=q.eq("team_id",profile.team_id);
+}
+
+const r=await q.order("created_at",{ascending:false}).limit(500);
+
+if(r.error)throw r.error;
+
+return r.data||[];
+
+}
+
+async function dashboard(){
+
+$("addBtn").style.display="none";
+
+const names=["leads","applications","policies","calls","buyers","chargebacks"];
+const counts={};
+
+for(const table of names){
+
+let q=db.from(table).select("id",{count:"exact",head:true});
+
+if(profile.team_id&&!admin()&&table!=="buyers"){
+q=q.eq("team_id",profile.team_id);
+}
+
+const r=await q;
+counts[table]=r.count||0;
+
+}
+
+$("content").innerHTML=`
+<div class="grid">
+<div class="card"><div class="muted">Leads</div><div class="num">${counts.leads}</div></div>
+<div class="card"><div class="muted">Applications</div><div class="num">${counts.applications}</div></div>
+<div class="card"><div class="muted">Policies</div><div class="num">${counts.policies}</div></div>
+<div class="card"><div class="muted">Calls</div><div class="num">${counts.calls}</div></div>
+<div class="card"><div class="muted">Buyers</div><div class="num">${counts.buyers}</div></div>
+<div class="card"><div class="muted">Chargebacks</div><div class="num">${counts.chargebacks}</div></div>
+</div>
+
+<div class="panel">
+<div class="body">
+<h3>Alpha Nation CRM</h3>
+<p class="muted">Logged in as ${esc(profile.full_name||user.email)}</p>
+<p>Role: <span class="badge">${esc(profile.role)}</span></p>
+<p class="muted">Use the navigation to manage CRM records.</p>
+</div>
+</div>
+`;
+
+status("Dashboard loaded.");
+
+}
+
+async function tablePage(){
+
+const cfg=CONFIG[page];
+
+$("addBtn").style.display="block";
+
+try{
+
+rows=await getRows(cfg.table);
+
+render(rows);
+
+status(`${rows.length} records loaded.`);
+
+}catch(e){
+
+$("content").innerHTML=`
+<div class="panel">
+<div class="body error">${esc(e.message)}</div>
+</div>`;
+
+status("Database error.",true);
+
+}
+
+}
+
+function render(list){
+
+const cfg=CONFIG[page];
+
+let html=`
+<div class="panel">
+<div class="ph">
+<b>${cfg.title}</b>
+<button class="btn" onclick="openForm()">+ Add</button>
+</div>
+
+<div class="body">
+<div class="toolbar">
+<input id="search" placeholder="Search..." oninput="searchRows()">
+</div>
+<div id="tableArea">
+`;
+
+if(!list.length){
+
+html+=`<p class="muted">No records found. Click + Add to create one.</p>`;
+
+}else{
+
+html+="<table><thead><tr>";
+
+cfg.cols.forEach(c=>{
+html+=`<th>${esc(c[1])}</th>`;
+});
+
+html+="<th>Actions</th></tr></thead><tbody>";
+
+list.forEach(row=>{
+
+html+="<tr>";
+
+cfg.cols.forEach(c=>{
+let v=row[c[0]];
+
+if(typeof v==="boolean")v=v?"Yes":"No";
+
+html+=`<td>${esc(v)}</td>`;
+});
+
+html+=`
+<td>
+<div class="actions">
+<button class="btn dark" onclick="openForm('${row.id}')">Edit</button>
+<button class="btn red" onclick="removeRow('${row.id}')">Delete</button>
+</div>
+</td>
+</tr>`;
+
+});
+
+html+="</tbody></table>";
+
+}
+
+html+=`</div></div></div>`;
+
+$("content").innerHTML=html;
+
+}
+
+function searchRows(){
+
+const q=($("search")?.value||"").toLowerCase();
+
+render(rows.filter(x=>
+JSON.stringify(x).toLowerCase().includes(q)
+));
+
+}
+
+async function openForm(id=null){
+
+const cfg=CONFIG[page];
+
+editing=id?rows.find(x=>x.id===id):null;
+
+$("modalTitle").textContent=
+editing?`Edit ${cfg.title}`:`Add ${cfg.title}`;
+
+let html="";
+
+for(const f of cfg.fields){
+
+const name=f[0];
+const label=f[1];
+const type=f[2];
+const required=!!f[3];
+const value=editing?.[name]??"";
+
+if(["buyer","carrier","campaign","agreement","lead","policy","profile"].includes(type)){
+
+const data=await relation(type);
+
+let options=`<option value="">Select...</option>`;
+
+data.forEach(x=>{
+
+const text=
+x.company_name||
+x.name||
+x.customer_name||
+x.full_name||
+x.email||
+x.id;
+
+options+=`
+<option value="${esc(x.id)}"
+${String(val<button data-page="teams">Teams</button>
 </nav>
 
 <button id="logout" class="btn dark">Sign out</button>
