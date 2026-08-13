@@ -1,1518 +1,3014 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Alpha Nation CRM</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#080808;color:#f5f5f5;font:14px system-ui,Arial}
-.hidden{display:none!important}
-.login{min-height:100vh;display:grid;place-items:center;padding:20px}
-.box{width:min(430px,100%);background:#111;border:1px solid #292929;border-radius:14px;padding:25px}
-.brand{font-size:21px;font-weight:900;letter-spacing:.5px}
-.muted{color:#999}
-label{display:block;color:#aaa;font-size:12px;margin-top:12px}
-input,select,textarea{width:100%;background:#090909;color:#fff;border:1px solid #333;border-radius:7px;padding:10px;margin-top:5px}
-textarea{min-height:90px;resize:vertical}
-.btn{background:#eee;color:#111;border:0;border-radius:7px;padding:10px 14px;font-weight:700;margin-top:12px;cursor:pointer}
-.btn.dark{background:#191919;color:#fff;border:1px solid #333}
-.btn.red{background:#8b2020;color:#fff}
-.btn:disabled{opacity:.5}
-.link{background:none;border:0;color:#aaa;cursor:pointer;padding:8px 0}
-.msg{margin-top:12px}
-.error{color:#ff7777}
-.success{color:#7ee787}
-.status{margin-top:12px;padding:9px;border:1px solid #292929;border-radius:7px;color:#999;font-size:12px}
-aside{position:fixed;inset:0 auto 0 0;width:225px;background:#101010;border-right:1px solid #292929;padding:18px 12px;overflow:auto}
-nav button{display:block;width:100%;padding:10px;background:none;border:0;color:#aaa;text-align:left;border-radius:7px;margin:3px 0;cursor:pointer}
-nav button:hover,nav button.active{background:#222;color:#fff}
-main{margin-left:225px;padding:24px;max-width:1700px}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.top h1{margin:0}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.card,.panel{background:#111;border:1px solid #292929;border-radius:10px}
-.card{padding:16px}
-.num{font-size:24px;font-weight:800;margin-top:6px}
-.panel{margin-top:18px;overflow:auto}
-.ph{padding:14px 16px;border-bottom:1px solid #292929;display:flex;justify-content:space-between;align-items:center;gap:10px}
-.body{padding:16px}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.toolbar input{margin:0;max-width:400px}
-table{width:100%;border-collapse:collapse}
-th,td{text-align:left;padding:9px;border-bottom:1px solid #292929;white-space:nowrap}
-th{font-size:11px;color:#999}
-.actions{display:flex;gap:5px}
-.actions button{margin:0;padding:6px 9px;font-size:12px}
-.modal{position:fixed;inset:0;background:#000c;display:grid;place-items:center;padding:15px;z-index:50}
-.modalbox{width:min(1000px,100%);max-height:92vh;overflow:auto;background:#121212;border:1px solid #333;border-radius:12px;padding:20px}
-.form{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.wide{grid-column:1/-1}
-.formActions{display:flex;justify-content:flex-end;gap:8px}
-.badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#222;font-size:11px}
-@media(max-width:850px){
-aside{width:60px}
-aside .brand{font-size:0}
-aside .brand:after{content:"AN";font-size:18px}
-nav button{font-size:0;text-align:center}
-nav button:after{content:"•";font-size:20px}
-main{margin-left:60px;padding:14px}
-.grid{grid-template-columns:repeat(2,1fr)}
-.form{grid-template-columns:1fr}
-}
-</style>
-</head>
-
-<body>
-
-<div id="login" class="login">
-<div class="box">
-<div class="brand">ALPHA NATION</div>
-<h2>CRM Login</h2>
-<p class="muted">Authorized users only. Accounts are created by Owner/Admin.</p>
-
-<label>Email
-<input id="email" type="email" autocomplete="username" placeholder="you@example.com">
-</label>
-
-<label>Password
-<input id="password" type="password" autocomplete="current-password" placeholder="Password">
-</label>
-
-<button id="loginBtn" class="btn">Sign in</button>
-<button id="forgotBtn" class="link">Forgot password?</button>
-
-<div id="msg" class="msg"></div>
-<div id="status" class="status">Starting CRM...</div>
-</div>
-</div>
-
-<div id="app" class="hidden">
-
-<aside>
-<div class="brand">ALPHA NATION</div>
-
-<nav id="nav">
-<button data-page="dashboard">Dashboard</button>
-<button data-page="policies">Policies</button>
-<button data-page="applications">Applications</button>
-<button data-page="leads">Leads</button>
-<button data-page="calls">Calls</button>
-<button data-page="buyers">Buyers</button>
-<button data-page="carriers">Carriers</button>
-<button data-page="campaigns">Campaigns</button>
-<button data-page="agreements">Agreements</button>
-<button data-page="commissions">Commissions</button>
-<button data-page="payments">Payments</button>
-<button data-page="team_payouts">Team Payouts</button>
-<button data-page="chargebacks">Chargebacks</button>
-<button data-page="teams">Teams</button>
-<button data-page="account">My Account</button>
-</nav>
-
-<button id="logout" class="btn dark">Sign out</button>
-</aside>
-
-<main>
-<div class="top">
-<div>
-<h1 id="title">Dashboard</h1>
-<div id="who" class="muted"></div>
-</div>
-<button id="addBtn" class="btn">+ Add</button>
-</div>
-
-<section id="content"></section>
-</main>
-</div>
-
-<div id="modal" class="modal hidden">
-<div class="modalbox">
-<div class="ph">
-<b id="modalTitle">Record</b>
-<button id="close" class="btn dark">Close</button>
-</div>
-<form id="form" class="form"></form>
-</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
 "use strict";
 
-const SUPABASE_URL="https://yzhtisfmlowkcvavgsxd.supabase.co";
-const SUPABASE_KEY="sb_publishable_GIhI_6sDVvzggGR1nVvEBg_psCt4iQu";
-
-let db;
-let user;
-let profile;
-let page="dashboard";
-let rows=[];
-let editing=null;
-
-const $=id=>document.getElementById(id);
-
-const CONFIG={
-
-policies:{
-title:"Policies",table:"policies",
-cols:[
-["customer_name","Customer"],["state","State"],["product","Product"],
-["plan_type","Level/GI"],["premium","Premium"],["coverage_amount","Coverage"],
-["policy_number","Policy"],["approval_status","Approval"],
-["first_draft_status","Draft"],["commission_status","Payout"],
-["agreed_payout","Payout"],["chargeback_amount","Chargeback"]
-],
-fields:[
-["customer_name","Customer","text",1],
-["state","State","text"],["carrier_id","Carrier","carrier"],
-["buyer_id","Buyer","buyer"],["campaign_id","Campaign","campaign"],
-["agent_id","Agent","profile"],["product","Product","text"],
-["plan_type","Level/GI","select",0,["Level","GI"]],
-["coverage_amount","Coverage","number"],["premium","Premium","number"],
-["policy_number","Policy number","text"],["effective_date","Effective date","date"],
-["approval_status","Approval","text"],["first_draft_date","First draft","date"],
-["first_draft_status","Draft status","text"],
-["first_premium_amount","First premium","number"],
-["commission_status","Commission status","text"],
-["agreed_payout","Agreed payout","number"],
-["agreement_id","Agreement","agreement"],
-["agreement_version","Agreement version","number"],
-["commission_amount","Commission amount","number"],
-["chargeback_amount","Chargeback amount","number"],
-["retention_status","Retention status","text"],
-["retention_month","Retention month","number"],
-["notes","Notes","textarea"]
-]},
-
-applications:{
-title:"Applications",table:"applications",
-cols:[
-["customer_name","Customer"],["product","Product"],["plan_type","Level/GI"],
-["premium","Premium"],["coverage_amount","Coverage"],
-["application_number","Application"],["status","Status"],
-["underwriting_status","Underwriting"]
-],
-fields:[
-["lead_id","Lead","lead"],["customer_name","Customer","text",1],
-["carrier_id","Carrier","carrier"],["product","Product","text"],
-["product_type","Product type","text"],["plan_type","Level/GI","text"],
-["coverage_amount","Coverage","number"],["premium","Premium","number"],
-["application_number","Application number","text"],
-["status","Status","text",1],["underwriting_status","Underwriting","text"],
-["agent_id","Agent","profile"]
-]},
-
-leads:{
-title:"Leads",table:"leads",
-cols:[
-["lead_id","Lead ID"],["customer_name","Customer"],["phone","Phone"],
-["state","State"],["dob","DOB"],["source","Source"],["call_status","Status"]
-],
-fields:[
-["lead_id","Lead ID","text"],["customer_name","Customer","text",1],
-["phone","Phone","text",1],["state","State","text"],
-["dob","DOB","date"],["source","Source","text"],
-["campaign_id","Campaign","campaign"],["closer_id","Closer","profile"],
-["call_status","Call status","text",1],["notes","Notes","textarea"]
-]},
-
-calls:{
-title:"Calls",table:"calls",
-cols:[
-["called_at","Date"],["status","Status"],["disposition","Disposition"],
-["duration_seconds","Seconds"],["recording_url","Recording"]
-],
-fields:[
-["lead_id","Lead","lead"],["closer_id","Closer","profile"],
-["duration_seconds","Duration seconds","number"],["status","Status","text"],
-["disposition","Disposition","text"],["recording_url","Recording URL","text"],
-["notes","Notes","textarea"]
-]},
-
-buyers:{
-title:"Buyers",table:"buyers",
-cols:[
-["company_name","Buyer"],["contact_name","Contact"],["email","Email"],
-["phone","Phone"],["payment_terms","Terms"],["status","Status"]
-],
-fields:[
-["company_name","Company name","text",1],["contact_name","Contact name","text"],
-["email","Email","email"],["phone","Phone","text"],
-["payment_terms","Payment terms","text"],["status","Status","text",1],
-["notes","Notes","textarea"]
-]},
-
-carriers:{
-title:"Carriers",table:"carriers",
-cols:[["name","Carrier"],["status","Status"],["notes","Notes"]],
-fields:[
-["name","Carrier name","text",1],["status","Status","text",1],
-["notes","Notes","textarea"]
-]},
-
-campaigns:{
-title:"Campaigns",table:"campaigns",
-cols:[["name","Campaign"],["campaign_type","Type"],["buyer_id","Buyer"],["states","States"],["status","Status"]],
-fields:[
-["name","Campaign name","text",1],["campaign_type","Campaign type","text",1],
-["buyer_id","Buyer","buyer"],["states","States","text"],
-["status","Status","text",1]
-]},
-
-agreements:{
-title:"Agreements",table:"agreements",
-cols:[
-["name","Agreement"],["version","Version"],["effective_from","Effective"],
-["effective_to","End"],["level_under_3","Level <3"],
-["level_over_3","Level >3"],["gi_payout","GI"]
-],
-fields:[
-["buyer_id","Buyer","buyer"],["name","Agreement name","text",1],
-["version","Version","number",1],["effective_from","Effective from","date",1],
-["effective_to","Effective to","date"],["level_under_3","Level <3","number"],
-["level_over_3","Level >3","number"],["gi_payout","GI payout","number"],
-["first_premium_required","First premium required","boolean",1],
-["terms","Terms JSON","textarea",1],["notes","Notes","textarea"]
-]},
-
-commissions:{
-title:"Commissions",table:"commissions",
-cols:[["policy_id","Policy"],["amount","Amount"],["status","Status"],["due_date","Due"],["paid_date","Paid"]],
-fields:[
-["policy_id","Policy","policy",1],["amount","Amount","number",1],
-["status","Status","text",1],["due_date","Due date","date"],
-["paid_date","Paid date","date"],["notes","Notes","textarea"]
-]},
-
-payments:{
-title:"Payments",table:"payments",
-cols:[
-["payment_date","Date"],["payment_type","Type"],["amount_usd","USD"],
-["amount_pkr","PKR"],["status","Status"],["reference","Reference"]
-],
-fields:[
-["buyer_id","Buyer","buyer"],["policy_id","Policy","policy"],
-["payment_type","Payment type","text",1],["amount_usd","Amount USD","number",1],
-["exchange_rate","Exchange rate","number"],["amount_pkr","Amount PKR","number"],
-["status","Status","text",1],["payment_date","Payment date","date"],
-["reference","Reference","text"],["notes","Notes","textarea"]
-]},
-
-team_payouts:{
-title:"Team Payouts",table:"team_payouts",
-cols:[
-["policy_id","Policy"],["team_member_id","Member"],
-["cost_usd","USD"],["cost_pkr","PKR"],["status","Status"],["payment_date","Date"]
-],
-fields:[
-["policy_id","Policy","policy"],["team_member_id","Team member","profile"],
-["cost_usd","Cost USD","number",1],["exchange_rate","Exchange rate","number"],
-["cost_pkr","Cost PKR","number"],["status","Status","text",1],
-["payment_date","Payment date","date"],["notes","Notes","textarea"]
-]},
-
-chargebacks:{
-title:"Chargebacks",table:"chargebacks",
-cols:[
-["policy_id","Policy"],["amount_usd","Amount"],["reason","Reason"],
-["status","Status"],["chargeback_date","Date"],["recovered_date","Recovered"]
-],
-fields:[
-["policy_id","Policy","policy"],["amount_usd","Amount USD","number",1],
-["reason","Reason","text"],["status","Status","text",1],
-["chargeback_date","Chargeback date","date"],
-["recovered_date","Recovered date","date"],["notes","Notes","textarea"]
-]},
-
-teams:{
-title:"Teams",table:"teams",
-cols:[["name","Team"],["active","Active"],["created_at","Created"]],
-fields:[
-["name","Team name","text",1],["active","Active","boolean",1]
-]}
-
-};
-
-function esc(v){
-return String(v??"")
-.replaceAll("&","&amp;")
-.replaceAll("<","&lt;")
-.replaceAll(">","&gt;")
-.replaceAll('"',"&quot;")
-.replaceAll("'","&#39;");
-}
-
-function status(text,error=false){
-$("status").textContent=text;
-$("status").className="status "+(error?"error":"");
-}
-
-function message(text,error=true){
-$("msg").textContent=text;
-$("msg").className="msg "+(error?"error":"success");
-}
-
-function clearMessage(){
-$("msg").textContent="";
-$("msg").className="msg";
-}
-
-function admin(){
-return ["owner","admin"].includes(String(profile?.role||"").toLowerCase());
-}
-
-async function profileLoad(){
-const r=await db.from("profiles")
-.select("id,email,full_name,role,active,team_id")
-.eq("id",user.id).maybeSingle();
-
-if(r.error)throw r.error;
-if(!r.data)throw new Error("No CRM profile exists for this account.");
-if(r.data.active===false)throw new Error("Your CRM account is inactive.");
-
-profile=r.data;
-}
-
-async function login(){
-
-clearMessage();
-
-const email=$("email").value.trim();
-const password=$("password").value;
-
-if(!email||!password){
-message("Enter email and password.");
-return;
-}
-
-$("loginBtn").disabled=true;
-$("loginBtn").textContent="Signing in...";
-status("Authenticating...");
-
-try{
-
-const r=await db.auth.signInWithPassword({email,password});
-
-if(r.error)throw r.error;
-
-user=r.data.user;
-
-await profileLoad();
-
-$("login").classList.add("hidden");
-$("app").classList.remove("hidden");
-
-$("who").textContent=
-`${profile.full_name||user.email} | ${profile.role}`;
-
-status("CRM connected.");
-
-await go("dashboard");
-
-}catch(e){
-
-message(e.message||"Sign in failed.");
-status("Authentication failed.",true);
-
-}finally{
-
-$("loginBtn").disabled=false;
-$("loginBtn").textContent="Sign in";
-
-}
-
-}
-
-async function forgot(){
-
-clearMessage();
-
-const email=$("email").value.trim();
-
-if(!email){
-message("Enter your email first.");
-return;
-}
-
-try{
-
-const r=await db.auth.resetPasswordForEmail(email,{
-redirectTo:"https://alphanationcrm09.github.io/alpha-nation-crm/"
-});
-
-if(r.error)throw r.error;
-
-message("Password reset instructions have been sent.",false);
-
-}catch(e){
-
-message(e.message||"Could not send reset email.");
-
-}
-
-}
-
-async function changePassword(){
-
-const form=$("form");
-
-form.innerHTML=`
-<div>
-<label>New password
-<input name="new_password" type="password" minlength="6" required>
-</label>
-</div>
-
-<div>
-<label>Confirm new password
-<input name="confirm_password" type="password" minlength="6" required>
-</label>
-</div>
-
-<div class="wide formActions">
-<button type="button" class="btn dark" onclick="closeModal()">Cancel</button>
-<button class="btn">Update Password</button>
-</div>
-`;
-
-$("modalTitle").textContent="Change Password";
-$("modal").classList.remove("hidden");
-
-form.onsubmit=async e=>{
-
-e.preventDefault();
-
-const fd=new FormData(form);
-const a=fd.get("new_password");
-const b=fd.get("confirm_password");
-
-if(a.length<6){
-alert("Password must contain at least 6 characters.");
-return;
-}
-
-if(a!==b){
-alert("Passwords do not match.");
-return;
-}
-
-const r=await db.auth.updateUser({password:a});
-
-if(r.error){
-alert(r.error.message);
-return;
-}
-
-closeModal();
-alert("Password changed successfully.");
-
-};
-
-}
-
-async function lookup(table){
-
-const r=await db.from(table).select("*").limit(1000);
-
-return r.error?[]:(r.data||[]);
-
-}
-
-async function relation(type){
-
-if(type==="buyer")return lookup("buyers");
-if(type==="carrier")return lookup("carriers");
-if(type==="campaign")return lookup("campaigns");
-if(type==="agreement")return lookup("agreements");
-if(type==="lead")return lookup("leads");
-if(type==="policy")return lookup("policies");
-if(type==="profile")return lookup("profiles");
-
-return[];
-
-}
-
-async function getRows(table){
-
-let q=db.from(table).select("*");
-
-if(profile.team_id&&!admin()&&table!=="teams"){
-q=q.eq("team_id",profile.team_id);
-}
-
-const r=await q.order("created_at",{ascending:false}).limit(500);
-
-if(r.error)throw r.error;
-
-return r.data||[];
-
-}
-
-async function dashboard(){
-
-$("addBtn").style.display="none";
-
-const names=["leads","applications","policies","calls","buyers","chargebacks"];
-const counts={};
-
-for(const table of names){
-
-let q=db.from(table).select("id",{count:"exact",head:true});
-
-if(profile.team_id&&!admin()&&table!=="buyers"){
-q=q.eq("team_id",profile.team_id);
-}
-
-const r=await q;
-counts[table]=r.count||0;
-
-}
-
-$("content").innerHTML=`
-<div class="grid">
-<div class="card"><div class="muted">Leads</div><div class="num">${counts.leads}</div></div>
-<div class="card"><div class="muted">Applications</div><div class="num">${counts.applications}</div></div>
-<div class="card"><div class="muted">Policies</div><div class="num">${counts.policies}</div></div>
-<div class="card"><div class="muted">Calls</div><div class="num">${counts.calls}</div></div>
-<div class="card"><div class="muted">Buyers</div><div class="num">${counts.buyers}</div></div>
-<div class="card"><div class="muted">Chargebacks</div><div class="num">${counts.chargebacks}</div></div>
-</div>
-
-<div class="panel">
-<div class="body">
-<h3>Alpha Nation CRM</h3>
-<p class="muted">Logged in as ${esc(profile.full_name||user.email)}</p>
-<p>Role: <span class="badge">${esc(profile.role)}</span></p>
-<p class="muted">Use the navigation to manage CRM records.</p>
-</div>
-</div>
-`;
-
-status("Dashboard loaded.");
-
-}
-
-async function tablePage(){
-
-const cfg=CONFIG[page];
-
-$("addBtn").style.display="block";
-
-try{
-
-rows=await getRows(cfg.table);
-
-render(rows);
-
-status(`${rows.length} records loaded.`);
-
-}catch(e){
-
-$("content").innerHTML=`
-<div class="panel">
-<div class="body error">${esc(e.message)}</div>
-</div>`;
-
-status("Database error.",true);
-
-}
-
-}
-
-function render(list){
-
-const cfg=CONFIG[page];
-
-let html=`
-<div class="panel">
-<div class="ph">
-<b>${cfg.title}</b>
-<button class="btn" onclick="openForm()">+ Add</button>
-</div>
-
-<div class="body">
-<div class="toolbar">
-<input id="search" placeholder="Search..." oninput="searchRows()">
-</div>
-<div id="tableArea">
-`;
-
-if(!list.length){
-
-html+=`<p class="muted">No records found. Click + Add to create one.</p>`;
-
-}else{
-
-html+="<table><thead><tr>";
-
-cfg.cols.forEach(c=>{
-html+=`<th>${esc(c[1])}</th>`;
-});
-
-html+="<th>Actions</th></tr></thead><tbody>";
-
-list.forEach(row=>{
-
-html+="<tr>";
-
-cfg.cols.forEach(c=>{
-let v=row[c[0]];
-
-if(typeof v==="boolean")v=v?"Yes":"No";
-
-html+=`<td>${esc(v)}</td>`;
-});
-
-html+=`
-<td>
-<div class="actions">
-<button class="btn dark" onclick="openForm('${row.id}')">Edit</button>
-<button class="btn red" onclick="removeRow('${row.id}')">Delete</button>
-</div>
-</td>
-</tr>`;
-
-});
-
-html+="</tbody></table>";
-
-}
-
-html+=`</div></div></div>`;
-
-$("content").innerHTML=html;
-
-}
-
-function searchRows(){
-
-const q=($("search")?.value||"").toLowerCase();
-
-render(rows.filter(x=>
-JSON.stringify(x).toLowerCase().includes(q)
-));
-
-}
-
-async function openForm(id=null){
-
-const cfg=CONFIG[page];
-
-editing=id?rows.find(x=>x.id===id):null;
-
-$("modalTitle").textContent=
-editing?`Edit ${cfg.title}`:`Add ${cfg.title}`;
-
-let html="";
-
-for(const f of cfg.fields){
-
-const name=f[0];
-const label=f[1];
-const type=f[2];
-const required=!!f[3];
-const value=editing?.[name]??"";
-
-if(["buyer","carrier","campaign","agreement","lead","policy","profile"].includes(type)){
-
-const data=await relation(type);
-
-let options=`<option value="">Select...</option>`;
-
-data.forEach(x=>{
-
-const text=
-x.company_name||
-x.name||
-x.customer_name||
-x.full_name||
-x.email||
-x.id;
-
-options+=`
-<option value="${esc(x.id)}"
-${String(val<button data-page="teams">Teams</button>
-</nav>
-
-<button id="logout" class="btn dark">Sign out</button>
-</aside>
-
-<main>
-<div class="top">
-<div>
-<h1 id="title">Dashboard</h1>
-<div id="who" class="muted"></div>
-</div>
-<button id="addBtn" class="btn">+ Add</button>
-</div>
-
-<section id="content"></section>
-</main>
-</div>
-
-<div id="modal" class="modal hidden">
-<div class="modalbox">
-<div class="ph">
-<b id="modalTitle">Record</b>
-<button id="close" class="btn dark">Close</button>
-</div>
-<form id="recordForm" class="form"></form>
-</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-"use strict";
-
-const SUPABASE_URL="https://yzhtisfmlowkcvavgsxd.supabase.co";
-const SUPABASE_KEY="sb_publishable_GIhI_6sDVvzggGR1nVvEBg_psCt4iQu";
-
-let db=null;
-let user=null;
-let profile=null;
-let currentPage="dashboard";
-let currentRows=[];
-let editing=null;
-
-const $=id=>document.getElementById(id);
-
-const pageConfig={
-
-policies:{
-title:"Policies",
-table:"policies",
-columns:[
-["customer_name","Customer"],
-["state","State"],
-["product","Product"],
-["plan_type","Level/GI"],
-["premium","Premium"],
-["coverage_amount","Coverage"],
-["policy_number","Policy"],
-["approval_status","Approval"],
-["first_draft_status","Draft"],
-["commission_status","Payout"],
-["agreed_payout","Payout"],
-["chargeback_amount","Chargeback"]
-],
-fields:[
-["customer_name","Customer","text",true],
-["state","State","text"],
-["carrier_id","Carrier","carrier"],
-["buyer_id","Buyer","buyer"],
-["campaign_id","Campaign","campaign"],
-["product","Product","text"],
-["plan_type","Level/GI","select",false,["Level","GI"]],
-["coverage_amount","Coverage","number"],
-["premium","Premium","number"],
-["policy_number","Policy number","text"],
-["effective_date","Effective date","date"],
-["approval_status","Approval status","select",false,["Submitted","Approved","Declined","Cancelled"]],
-["first_draft_date","First draft date","date"],
-["first_draft_status","Draft status","select",false,["Pending","Cleared","Failed"]],
-["first_premium_amount","First premium","number"],
-["commission_status","Commission status","select",false,["Pending","Payable","Paid","Chargeback"]],
-["agreed_payout","Agreed payout","number"],
-["agreement_id","Agreement","agreement"],
-["agreement_version","Agreement version","number"],
-["commission_amount","Commission amount","number"],
-["chargeback_amount","Chargeback amount","number"],
-["retention_status","Retention status","select",false,["Pending","Retained","Cancelled"]],
-["retention_month","Retention month","number"],
-["notes","Notes","textarea"]
-]
-},
-
-applications:{
-title:"Applications",
-table:"applications",
-columns:[
-["customer_name","Customer"],
-["product","Product"],
-["plan_type","Level/GI"],
-["premium","Premium"],
-["coverage_amount","Coverage"],
-["application_number","Application"],
-["status","Status"],
-["underwriting_status","Underwriting"]
-],
-fields:[
-["customer_name","Customer","text",true],
-["lead_id","Lead","lead"],
-["carrier_id","Carrier","carrier"],
-["product","Product","text"],
-["product_type","Product type","text"],
-["plan_type","Level/GI","select",false,["Level","GI"]],
-["coverage_amount","Coverage","number"],
-["premium","Premium","number"],
-["application_number","Application number","text"],
-["status","Status","select",false,["Submitted","Approved","Declined","Pending","Cancelled"]],
-["underwriting_status","Underwriting","text"]
-]
-},
-
-leads:{
-title:"Leads",
-table:"leads",
-columns:[
-["lead_id","Lead ID"],
-["customer_name","Customer"],
-["phone","Phone"],
-["state","State"],
-["dob","DOB"],
-["source","Source"],
-["call_status","Status"]
-],
-fields:[
-["lead_id","Lead ID","text"],
-["customer_name","Customer","text",true],
-["phone","Phone","text",true],
-["state","State","text"],
-["dob","Date of birth","date"],
-["source","Source","text"],
-["campaign_id","Campaign","campaign"],
-["closer_id","Closer","profile"],
-["call_status","Call status","select",false,["New","Contacted","Qualified","Not Interested","Sold","Do Not Call"]],
-["notes","Notes","textarea"]
-]
-},
-
-calls:{
-title:"Calls",
-table:"calls",
-columns:[
-["called_at","Date"],
-["status","Status"],
-["disposition","Disposition"],
-["duration_seconds","Seconds"],
-["recording_url","Recording"]
-],
-fields:[
-["lead_id","Lead","lead"],
-["closer_id","Closer","profile"],
-["duration_seconds","Duration seconds","number"],
-["status","Status","select",false,["Answered","No Answer","Dropped","Completed"]],
-["disposition","Disposition","text"],
-["recording_url","Recording URL","text"],
-["notes","Notes","textarea"]
-]
-},
-
-buyers:{
-title:"Buyers",
-table:"buyers",
-columns:[
-["company_name","Buyer"],
-["contact_name","Contact"],
-["email","Email"],
-["phone","Phone"],
-["payment_terms","Terms"],
-["status","Status"]
-],
-fields:[
-["company_name","Company name","text",true],
-["contact_name","Contact name","text"],
-["email","Email","email"],
-["phone","Phone","text"],
-["payment_terms","Payment terms","text"],
-["status","Status","select",false,["Active","Inactive","Paused"]],
-["notes","Notes","textarea"]
-]
-},
-
-carriers:{
-title:"Carriers",
-table:"carriers",
-columns:[
-["name","Carrier"],
-["status","Status"],
-["notes","Notes"]
-],
-fields:[
-["name","Carrier name","text",true],
-["status","Status","select",false,["Active","Inactive"]],
-["notes","Notes","textarea"]
-]
-},
-
-campaigns:{
-title:"Campaigns",
-table:"campaigns",
-columns:[
-["name","Campaign"],
-["campaign_type","Type"],
-["states","States"],
-["status","Status"]
-],
-fields:[
-["name","Campaign name","text",true],
-["campaign_type","Campaign type","text",true],
-["buyer_id","Buyer","buyer"],
-["states","States","text"],
-["status","Status","select",false,["Active","Paused","Inactive"]]
-]
-},
-
-agreements:{
-title:"Agreements",
-table:"agreements",
-columns:[
-["name","Agreement"],
-["version","Version"],
-["effective_from","Effective"],
-["effective_to","End"],
-["level_under_3","Level <3"],
-["level_over_3","Level >3"],
-["gi_payout","GI"],
-["first_premium_required","First premium"]
-],
-fields:[
-["buyer_id","Buyer","buyer"],
-["name","Agreement name","text",true],
-["version","Version","number"],
-["effective_from","Effective from","date",true],
-["effective_to","Effective to","date"],
-["level_under_3","Level <3 payout","number"],
-["level_over_3","Level >3 payout","number"],
-["gi_payout","GI payout","number"],
-["first_premium_required","First premium required","boolean"],
-["terms","Terms JSON","textarea"],
-["notes","Notes","textarea"]
-]
-},
-
-commissions:{
-title:"Commissions",
-table:"commissions",
-columns:[
-["policy_id","Policy"],
-["amount","Amount"],
-["status","Status"],
-["due_date","Due"],
-["paid_date","Paid"]
-],
-fields:[
-["policy_id","Policy","policy",true],
-["amount","Amount","number",true],
-["status","Status","select",false,["Pending","Payable","Paid","Chargeback"]],
-["due_date","Due date","date"],
-["paid_date","Paid date","date"],
-["notes","Notes","textarea"]
-]
-},
-
-payments:{
-title:"Payments",
-table:"payments",
-columns:[
-["payment_date","Date"],
-["payment_type","Type"],
-["amount_usd","USD"],
-["amount_pkr","PKR"],
-["status","Status"],
-["reference","Reference"]
-],
-fields:[
-["buyer_id","Buyer","buyer"],
-["policy_id","Policy","policy"],
-["payment_type","Payment type","select",false,["Commission","Lead","Transfer","Other"]],
-["amount_usd","Amount USD","number"],
-["exchange_rate","Exchange rate","number"],
-["amount_pkr","Amount PKR","number"],
-["status","Status","select",false,["Pending","Paid","Failed"]],
-["payment_date","Payment date","date"],
-["reference","Reference","text"],
-["notes","Notes","textarea"]
-]
-},
-
-team_payouts:{
-title:"Team Payouts",
-table:"team_payouts",
-columns:[
-["policy_id","Policy"],
-["team_member_id","Member"],
-["cost_usd","USD"],
-["cost_pkr","PKR"],
-["status","Status"],
-["payment_date","Date"]
-],
-fields:[
-["policy_id","Policy","policy"],
-["team_member_id","Team member","profile"],
-["cost_usd","Cost USD","number"],
-["exchange_rate","Exchange rate","number"],
-["cost_pkr","Cost PKR","number"],
-["status","Status","select",false,["Pending","Paid","Cancelled"]],
-["payment_date","Payment date","date"],
-["notes","Notes","textarea"]
-]
-},
-
-chargebacks:{
-title:"Chargebacks",
-table:"chargebacks",
-columns:[
-["policy_id","Policy"],
-["amount_usd","Amount"],
-["reason","Reason"],
-["status","Status"],
-["chargeback_date","Date"],
-["recovered_date","Recovered"]
-],
-fields:[
-["policy_id","Policy","policy"],
-["amount_usd","Amount USD","number",true],
-["reason","Reason","text"],
-["status","Status","select",false,["Pending","Recovered","Disputed","Written Off"]],
-["chargeback_date","Chargeback date","date"],
-["recovered_date","Recovered date","date"],
-["notes","Notes","textarea"]
-]
-},
-
-teams:{
-title:"Teams",
-table:"teams",
-columns:[
-["name","Team"],
-["active","Active"],
-["created_at","Created"]
-],
-fields:[
-["name","Team name","text",true],
-["active","Active","boolean"]
-]
-}
-
-};
-
-
-/* ---------- Utility ---------- */
-
-function esc(v){
-return String(v??"")
-.replaceAll("&","&amp;")
-.replaceAll("<","&lt;")
-.replaceAll(">","&gt;")
-.replaceAll('"',"&quot;")
-.replaceAll("'","&#39;");
-}
-
-function setStatus(text,error=false){
-$("status").textContent=text;
-$("status").className="status "+(error?"error":"");
-}
-
-function msg(text,error=true){
-$("msg").textContent=text;
-$("msg").className="msg "+(error?"error":"success");
-}
-
-function clearMsg(){
-$("msg").textContent="";
-$("msg").className="msg";
-}
-
-async function waitForSupabase(){
-
-for(let i=0;i<100;i++){
-
-if(window.supabase&&window.supabase.createClient){
-
-db=window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
 );
 
-return;
+const loginPage = document.getElementById("loginPage");
+const app = document.getElementById("app");
 
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+
+const loginBtn = document.getElementById("loginBtn");
+const forgotBtn = document.getElementById("forgotBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+
+const message = document.getElementById("message");
+const statusBox = document.getElementById("status");
+
+const userInfo = document.getElementById("userInfo");
+const pageTitle = document.getElementById("pageTitle");
+const content = document.getElementById("content");
+const nav = document.getElementById("nav");
+const addBtn = document.getElementById("addBtn");
+
+const modal = document.getElementById("modal");
+const modalTitle = document.getElementById("modalTitle");
+const closeBtn = document.getElementById("close");
+const recordForm = document.getElementById("recordForm");
+
+let currentUser = null;
+let currentProfile = null;
+let currentPage = "dashboard";
+let currentRows = [];
+let editingRecord = null;
+
+function $(id) {
+  return document.getElementById(id);
 }
 
-await new Promise(r=>setTimeout(r,100));
-
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
-throw new Error("Supabase library could not be loaded.");
+function showMessage(text, type = "error") {
+  message.textContent = text;
+  message.className = "msg";
 
+  if (type === "success") {
+    message.classList.add("success");
+  } else {
+    message.classList.add("error");
+  }
 }
 
-
-/* ---------- Authentication ---------- */
-
-async function loadProfile(){
-
-const r=await db
-.from("profiles")
-.select("id,email,full_name,role,active,team_id")
-.eq("id",user.id)
-.maybeSingle();
-
-if(r.error)throw r.error;
-
-profile=r.data;
-
-if(!profile){
-throw new Error("No CRM profile exists for this account.");
+function clearMessage() {
+  message.textContent = "";
+  message.className = "msg";
 }
 
-if(profile.active===false){
-throw new Error("Your CRM account is inactive.");
+function setStatus(text, type = "normal") {
+  statusBox.textContent = text;
+  statusBox.className = "status";
+
+  if (type === "error") {
+    statusBox.classList.add("error");
+  }
+
+  if (type === "success") {
+    statusBox.classList.add("success");
+  }
 }
 
+function isOwner() {
+  return currentProfile &&
+    String(currentProfile.role).toLowerCase() === "owner";
 }
 
-function isAdmin(){
-const r=String(profile?.role||"").toLowerCase();
-return r==="owner"||r==="admin";
+function isAdmin() {
+  return currentProfile &&
+    ["owner", "admin"].includes(
+      String(currentProfile.role).toLowerCase()
+    );
 }
 
-function isViewer(){
-return String(profile?.role||"").toLowerCase()==="viewer";
+function isTeamUser() {
+  return currentProfile &&
+    String(currentProfile.role).toLowerCase() === "team";
+}
+  const PAGE_CONFIG = {
+
+  policies: {
+    title: "Policies",
+    table: "policies",
+    columns: [
+      ["customer_name", "Customer"],
+      ["state", "State"],
+      ["product", "Product"],
+      ["plan_type", "Level/GI"],
+      ["premium", "Premium"],
+      ["coverage_amount", "Coverage"],
+      ["policy_number", "Policy"],
+      ["approval_status", "Approval"],
+      ["first_draft_status", "Draft"],
+      ["commission_status", "Payout"],
+      ["agreed_payout", "Payout"],
+      ["chargeback_amount", "Chargeback"]
+    ],
+    fields: [
+      ["customer_name", "Customer", "text"],
+      ["state", "State", "text"],
+      ["carrier_id", "Carrier", "carrier"],
+      ["buyer_id", "Buyer", "buyer"],
+      ["campaign_id", "Campaign", "campaign"],
+      ["product", "Product", "text"],
+      ["plan_type", "Level/GI", "select", ["Level", "GI"]],
+      ["coverage_amount", "Coverage", "number"],
+      ["premium", "Premium", "number"],
+      ["policy_number", "Policy Number", "text"],
+      ["effective_date", "Effective Date", "date"],
+      ["approval_status", "Approval Status", "select",
+        ["Submitted", "Approved", "Declined", "Cancelled"]],
+      ["first_draft_date", "First Draft Date", "date"],
+      ["first_draft_status", "Draft Status", "select",
+        ["Pending", "Cleared", "Failed"]],
+      ["first_premium_amount", "First Premium", "number"],
+      ["commission_status", "Commission Status", "select",
+        ["Pending", "Payable", "Paid", "Chargeback"]],
+      ["agreed_payout", "Agreed Payout", "number"],
+      ["agreement_id", "Agreement", "agreement"],
+      ["agreement_version", "Agreement Version", "number"],
+      ["commission_amount", "Commission Amount", "number"],
+      ["chargeback_amount", "Chargeback Amount", "number"],
+      ["retention_status", "Retention Status", "select",
+        ["Pending", "Retained", "Cancelled"]],
+      ["retention_month", "Retention Month", "number"],
+      ["notes", "Notes", "textarea"]
+    ]
+  },
+
+  applications: {
+    title: "Applications",
+    table: "applications",
+    columns: [
+      ["customer_name", "Customer"],
+      ["product", "Product"],
+      ["plan_type", "Level/GI"],
+      ["premium", "Premium"],
+      ["coverage_amount", "Coverage"],
+      ["application_number", "Application"],
+      ["status", "Status"],
+      ["underwriting_status", "Underwriting"]
+    ],
+    fields: [
+      ["customer_name", "Customer", "text"],
+      ["lead_id", "Lead", "lead"],
+      ["carrier_id", "Carrier", "carrier"],
+      ["product", "Product", "text"],
+      ["product_type", "Product Type", "text"],
+      ["plan_type", "Level/GI", "select", ["Level", "GI"]],
+      ["coverage_amount", "Coverage", "number"],
+      ["premium", "Premium", "number"],
+      ["application_number", "Application Number", "text"],
+      ["status", "Status", "select",
+        ["Submitted", "Approved", "Declined", "Pending", "Cancelled"]],
+      ["underwriting_status", "Underwriting", "text"]
+    ]
+  },
+
+  leads: {
+    title: "Leads",
+    table: "leads",
+    columns: [
+      ["lead_id", "Lead ID"],
+      ["customer_name", "Customer"],
+      ["phone", "Phone"],
+      ["state", "State"],
+      ["dob", "DOB"],
+      ["source", "Source"],
+      ["call_status", "Status"]
+    ],
+    fields: [
+      ["lead_id", "Lead ID", "text"],
+      ["customer_name", "Customer", "text"],
+      ["phone", "Phone", "text"],
+      ["state", "State", "text"],
+      ["dob", "Date of Birth", "date"],
+      ["source", "Source", "text"],
+      ["campaign_id", "Campaign", "campaign"],
+      ["closer_id", "Closer", "profile"],
+      ["call_status", "Call Status", "select",
+        ["New", "Contacted", "Qualified", "Not Interested", "Sold", "Do Not Call"]],
+      ["notes", "Notes", "textarea"]
+    ]
+  },
+
+  calls: {
+    title: "Calls",
+    table: "calls",
+    columns: [
+      ["called_at", "Date"],
+      ["status", "Status"],
+      ["disposition", "Disposition"],
+      ["duration_seconds", "Seconds"],
+      ["recording_url", "Recording"]
+    ],
+    fields: [
+      ["lead_id", "Lead", "lead"],
+      ["closer_id", "Closer", "profile"],
+      ["duration_seconds", "Duration Seconds", "number"],
+      ["status", "Status", "select",
+        ["Answered", "No Answer", "Dropped", "Completed"]],
+      ["disposition", "Disposition", "text"],
+      ["recording_url", "Recording URL", "text"],
+      ["notes", "Notes", "textarea"]
+    ]
+  },
+
+  buyers: {
+    title: "Buyers",
+    table: "buyers",
+    columns: [
+      ["company_name", "Buyer"],
+      ["contact_name", "Contact"],
+      ["email", "Email"],
+      ["phone", "Phone"],
+      ["payment_terms", "Terms"],
+      ["status", "Status"]
+    ],
+    fields: [
+      ["company_name", "Company Name", "text"],
+      ["contact_name", "Contact Name", "text"],
+      ["email", "Email", "email"],
+      ["phone", "Phone", "text"],
+      ["payment_terms", "Payment Terms", "text"],
+      ["status", "Status", "select",
+        ["Active", "Inactive", "Paused"]],
+      ["notes", "Notes", "textarea"]
+    ]
+  },
+
+  carriers: {
+    title: "Carriers",
+    table: "carriers",
+    columns: [
+      ["name", "Carrier"],
+      ["status", "Status"],
+      ["notes", "Notes"]
+    ],
+    fields: [
+      ["name", "Carrier Name", "text"],
+      ["status", "Status", "select", ["Active", "Inactive"]],
+      ["notes", "Notes", "textarea"]
+    ]
+  }
+};
+      PAGE_CONFIG.campaigns = {
+  title: "Campaigns",
+  table: "campaigns",
+  columns: [
+    ["name", "Campaign"],
+    ["campaign_type", "Type"],
+    ["states", "States"],
+    ["status", "Status"]
+  ],
+  fields: [
+    ["name", "Campaign Name", "text"],
+    ["campaign_type", "Campaign Type", "text"],
+    ["buyer_id", "Buyer", "buyer"],
+    ["states", "States", "text"],
+    ["status", "Status", "select", ["Active", "Paused", "Inactive"]]
+  ]
+};
+
+PAGE_CONFIG.agreements = {
+  title: "Agreements",
+  table: "agreements",
+  columns: [
+    ["name", "Agreement"],
+    ["version", "Version"],
+    ["effective_from", "Effective"],
+    ["effective_to", "End"],
+    ["level_under_3", "Level <3"],
+    ["level_over_3", "Level >3"],
+    ["gi_payout", "GI"],
+    ["first_premium_required", "First Premium"]
+  ],
+  fields: [
+    ["buyer_id", "Buyer", "buyer"],
+    ["name", "Agreement Name", "text"],
+    ["version", "Version", "number"],
+    ["effective_from", "Effective From", "date"],
+    ["effective_to", "Effective To", "date"],
+    ["level_under_3", "Level <3 Payout", "number"],
+    ["level_over_3", "Level >3 Payout", "number"],
+    ["gi_payout", "GI Payout", "number"],
+    ["first_premium_required", "First Premium Required", "boolean"],
+    ["terms", "Terms", "textarea"],
+    ["notes", "Notes", "textarea"]
+  ]
+};
+
+PAGE_CONFIG.commissions = {
+  title: "Commissions",
+  table: "commissions",
+  columns: [
+    ["policy_id", "Policy"],
+    ["amount", "Amount"],
+    ["status", "Status"],
+    ["due_date", "Due"],
+    ["paid_date", "Paid"]
+  ],
+  fields: [
+    ["policy_id", "Policy", "policy"],
+    ["amount", "Amount", "number"],
+    ["status", "Status", "select", ["Pending", "Payable", "Paid", "Chargeback"]],
+    ["due_date", "Due Date", "date"],
+    ["paid_date", "Paid Date", "date"],
+    ["notes", "Notes", "textarea"]
+  ]
+};
+
+PAGE_CONFIG.payments = {
+  title: "Payments",
+  table: "payments",
+  columns: [
+    ["payment_date", "Date"],
+    ["payment_type", "Type"],
+    ["amount_usd", "USD"],
+    ["amount_pkr", "PKR"],
+    ["status", "Status"],
+    ["reference", "Reference"]
+  ],
+  fields: [
+    ["buyer_id", "Buyer", "buyer"],
+    ["policy_id", "Policy", "policy"],
+    ["payment_type", "Payment Type", "select", ["Commission", "Lead", "Transfer", "Other"]],
+    ["amount_usd", "Amount USD", "number"],
+    ["exchange_rate", "Exchange Rate", "number"],
+    ["amount_pkr", "Amount PKR", "number"],
+    ["status", "Status", "select", ["Pending", "Paid", "Failed"]],
+    ["payment_date", "Payment Date", "date"],
+    ["reference", "Reference", "text"],
+    ["notes", "Notes", "textarea"]
+  ]
+};
+
+PAGE_CONFIG.team_payouts = {
+  title: "Team Payouts",
+  table: "team_payouts",
+  columns: [
+    ["policy_id", "Policy"],
+    ["team_member_id", "Member"],
+    ["cost_usd", "USD"],
+    ["cost_pkr", "PKR"],
+    ["status", "Status"],
+    ["payment_date", "Date"]
+  ],
+  fields: [
+    ["policy_id", "Policy", "policy"],
+    ["team_member_id", "Team Member", "profile"],
+    ["cost_usd", "Cost USD", "number"],
+    ["exchange_rate", "Exchange Rate", "number"],
+    ["cost_pkr", "Cost PKR", "number"],
+    ["status", "Status", "select", ["Pending", "Paid", "Cancelled"]],
+    ["payment_date", "Payment Date", "date"],
+    ["notes", "Notes", "textarea"]
+  ]
+};
+
+PAGE_CONFIG.chargebacks = {
+  title: "Chargebacks",
+  table: "chargebacks",
+  columns: [
+    ["policy_id", "Policy"],
+    ["amount_usd", "Amount"],
+    ["reason", "Reason"],
+    ["status", "Status"],
+    ["chargeback_date", "Date"],
+    ["recovered_date", "Recovered"]
+  ],
+  fields: [
+    ["policy_id", "Policy", "policy"],
+    ["amount_usd", "Amount USD", "number"],
+    ["reason", "Reason", "text"],
+    ["status", "Status", "select", ["Pending", "Recovered", "Disputed", "Written Off"]],
+    ["chargeback_date", "Chargeback Date", "date"],
+    ["recovered_date", "Recovered Date", "date"],
+    ["notes", "Notes", "textarea"]
+  ]
+};
+
+PAGE_CONFIG.teams = {
+  title: "Teams",
+  table: "teams",
+  columns: [
+    ["name", "Team"],
+    ["active", "Active"],
+    ["created_at", "Created"]
+  ],
+  fields: [
+    ["name", "Team Name", "text"],
+    ["active", "Active", "boolean"]
+  ]
+};
+
+function canManageRecords() {
+  return isOwner() || isAdmin();
 }
 
-async function login(){
-
-clearMsg();
-
-const email=$("email").value.trim();
-const password=$("password").value;
-
-if(!email||!password){
-msg("Enter your email and password.");
-return;
+function canManageTeams() {
+  return isOwner() || isAdmin();
 }
 
-$("loginBtn").disabled=true;
-$("loginBtn").textContent="Signing in...";
-setStatus("Authenticating...");
+function updateNavigation() {
+  const adminPages = [
+    "leads",
+    "calls",
+    "buyers",
+    "carriers",
+    "campaigns",
+    "agreements",
+    "commissions",
+    "payments",
+    "team_payouts",
+    "chargebacks"
+  ];
 
-try{
+  nav.querySelectorAll("[data-page]").forEach(button => {
+    const name = button.dataset.page;
 
-const r=await db.auth.signInWithPassword({
-email,
-password
-});
+    if (adminPages.includes(name) && !canManageRecords()) {
+      button.style.display = "none";
+    } else if (name === "teams" && !canManageTeams()) {
+      button.style.display = "none";
+    } else {
+      button.style.display = "block";
+    }
+  });
+}
+function showLogin() {
+  loginPage.classList.remove("hidden");
+  app.classList.add("hidden");
 
-if(r.error)throw r.error;
+  currentUser = null;
+  currentProfile = null;
 
-user=r.data.user;
+  userInfo.textContent = "";
 
-await loadProfile();
-
-$("login").classList.add("hidden");
-$("app").classList.remove("hidden");
-
-$("who").textContent=
-`${profile.full_name||user.email} | ${profile.role}`;
-
-setStatus("CRM connected.","success");
-
-go("dashboard");
-
-}catch(e){
-
-console.error(e);
-msg(e.message||"Sign in failed.");
-setStatus("Authentication failed.",true);
-
-}finally{
-
-$("loginBtn").disabled=false;
-$("loginBtn").textContent="Sign in";
-
+  setStatus(
+    "Enter your email and password.",
+    "normal"
+  );
 }
 
+function showApp() {
+  loginPage.classList.add("hidden");
+  app.classList.remove("hidden");
+
+  updateNavigation();
+
+  if (currentUser) {
+    userInfo.textContent =
+      currentUser.email || "";
+  }
+
+  goToPage("dashboard");
 }
 
-async function logout(){
-await db.auth.signOut();
-location.reload();
+async function loadProfile(userId) {
+  const result = await db
+    .from("profiles")
+    .select("id,email,role,team_id,full_name")
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  if (!result.data) {
+    throw new Error(
+      "CRM profile not found. Ask the Owner/Admin to create your profile."
+    );
+  }
+
+  currentProfile = result.data;
+  return currentProfile;
 }
 
-async function forgotPassword(){
+async function checkSession() {
+  try {
+    setStatus("Checking Supabase connection...");
 
-clearMsg();
+    const result = await db.auth.getSession();
 
-const email=$("email").value.trim();
+    if (result.error) {
+      throw result.error;
+    }
 
-if(!email){
-msg("Enter your email first.");
-return;
+    if (result.data.session) {
+      currentUser = result.data.session.user;
+
+      setStatus(
+        "Session found. Loading CRM...",
+        "success"
+      );
+
+      await loadProfile(currentUser.id);
+
+      showApp();
+    } else {
+      setStatus(
+        "Supabase connected. Please sign in.",
+        "success"
+      );
+
+      showLogin();
+    }
+
+  } catch (error) {
+
+    setStatus(
+      "CRM error: " +
+      (error.message || String(error)),
+      "error"
+    );
+
+    showLogin();
+  }
 }
 
-try{
+async function login() {
 
-const r=await db.auth.resetPasswordForEmail(email,{
-redirectTo:"https://alphanationcrm09.github.io/alpha-nation-crm/"
-});
+  clearMessage();
 
-if(r.error)throw r.error;
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
 
-msg("Password reset instructions were sent to your email.",false);
+  if (!email || !password) {
+    showMessage(
+      "Enter your email and password."
+    );
+    return;
+  }
 
-}catch(e){
-msg(e.message||"Unable to send reset email.");
+  loginBtn.disabled = true;
+  loginBtn.textContent = "Signing in...";
+
+  setStatus("Signing in...");
+
+  try {
+
+    const result =
+      await db.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+
+    if (result.error) {
+      throw result.error;
+    }
+
+    if (!result.data || !result.data.user) {
+      throw new Error(
+        "Supabase did not return a user."
+      );
+    }
+
+    currentUser = result.data.user;
+
+    setStatus(
+      "Login successful. Loading profile...",
+      "success"
+    );
+
+    await loadProfile(currentUser.id);
+
+    showMessage(
+      "Login successful.",
+      "success"
+    );
+
+    showApp();
+
+  } catch (error) {
+
+    currentUser = null;
+    currentProfile = null;
+
+    showMessage(
+      error.message || "Login failed."
+    );
+
+    setStatus(
+      "Login failed.",
+      "error"
+    );
+
+  } finally {
+
+    loginBtn.disabled = false;
+    loginBtn.textContent = "Sign in";
+  }
 }
 
+async function logout() {
+
+  try {
+    await db.auth.signOut();
+  } finally {
+    showLogin();
+    clearMessage();
+    emailInput.value = "";
+    passwordInput.value = "";
+  }
 }
 
+async function forgotPassword() {
 
-/* ---------- Data ---------- */
+  clearMessage();
 
-async function fetchRows(table){
+  const email = emailInput.value.trim();
 
-let q=db.from(table).select("*");
+  if (!email) {
+    showMessage(
+      "Enter your email first, then click Forgot password."
+    );
+    emailInput.focus();
+    return;
+  }
 
-if(profile?.team_id&&table!=="teams"&&!isAdmin()){
+  forgotBtn.disabled = true;
+  forgotBtn.textContent = "Sending...";
 
-q=q.eq("team_id",profile.team_id);
+  try {
 
+    const redirectUrl =
+      window.location.origin +
+      window.location.pathname;
+
+    const result =
+      await db.auth.resetPasswordForEmail(
+        email,
+        {
+          redirectTo: redirectUrl
+        }
+      );
+
+    if (result.error) {
+      throw result.error;
+    }
+
+    showMessage(
+      "Password reset email sent. Check your inbox.",
+      "success"
+    );
+
+    setStatus(
+      "Password reset link sent.",
+      "success"
+    );
+
+  } catch (error) {
+
+    showMessage(
+      error.message ||
+      "Unable to send password reset email."
+    );
+
+    setStatus(
+      "Password reset failed.",
+      "error"
+    );
+
+  } finally {
+
+    forgotBtn.disabled = false;
+    forgotBtn.textContent = "Forgot password?";
+  }
 }
 
-const r=await q
-.order("created_at",{ascending:false})
-.limit(500);
+loginBtn.addEventListener(
+  "click",
+  login
+);
 
-if(r.error)throw r.error;
+forgotBtn.addEventListener(
+  "click",
+  forgotPassword
+);
 
-return r.data||[];
+logoutBtn.addEventListener(
+  "click",
+  logout
+);
 
+passwordInput.addEventListener(
+  "keydown",
+  function(event) {
+    if (event.key === "Enter") {
+      login();
+    }
+  }
+);
+
+db.auth.onAuthStateChange(
+  async function(event, session) {
+
+    if (event === "SIGNED_OUT") {
+      showLogin();
+      return;
+    }
+
+    if (
+      session &&
+      event !== "INITIAL_SESSION"
+    ) {
+
+      try {
+
+        currentUser = session.user;
+
+        await loadProfile(
+          session.user.id
+        );
+
+        showApp();
+
+      } catch (error) {
+
+        await db.auth.signOut();
+
+        showMessage(
+          error.message ||
+          "Unable to load CRM profile."
+        );
+      }
+    }
+  }
+);
+  function buildQuery(tableName) {
+
+  let query = db
+    .from(tableName)
+    .select("*");
+
+  if (
+    isTeamUser() &&
+    currentProfile &&
+    currentProfile.team_id
+  ) {
+    query = query.eq(
+      "team_id",
+      currentProfile.team_id
+    );
+  }
+
+  return query;
 }
 
-async function lookup(table){
+async function loadRows(pageName) {
 
-const r=await db.from(table).select("*").limit(1000);
+  const config =
+    PAGE_CONFIG[pageName];
 
-if(r.error)return[];
+  if (!config) {
+    content.innerHTML =
+      '<div class="panel"><div class="body">Page configuration not found.</div></div>';
+    return;
+  }
 
-return r.data||[];
+  setStatus(
+    "Loading " + config.title + "..."
+  );
 
+  const result =
+    await buildQuery(config.table)
+      .order("created_at", {
+        ascending: false
+      })
+      .limit(500);
+
+  if (result.error) {
+
+    content.innerHTML =
+      '<div class="panel">' +
+      '<div class="body">' +
+      '<div class="error">' +
+      escapeHtml(result.error.message) +
+      '</div>' +
+      '</div>' +
+      '</div>';
+
+    setStatus(
+      "Database error.",
+      "error"
+    );
+
+    return;
+  }
+
+  currentRows = result.data || [];
+
+  renderTable(
+    pageName,
+    currentRows
+  );
+
+  setStatus(
+    currentRows.length +
+    " records loaded.",
+    "success"
+  );
 }
 
-async function relationData(type){
+function renderTable(
+  pageName,
+  rows
+) {
 
-if(type==="buyer")return lookup("buyers");
-if(type==="carrier")return lookup("carriers");
-if(type==="campaign")return lookup("campaigns");
-if(type==="agreement")return lookup("agreements");
-if(type==="lead")return lookup("leads");
-if(type==="policy")return lookup("policies");
-if(type==="profile")return lookup("profiles");
+  const config =
+    PAGE_CONFIG[pageName];
 
-return[];
+  let html =
+    '<div class="panel">' +
+    '<div class="body">';
 
+  html +=
+    '<div class="toolbar">' +
+    '<input id="tableSearch" ' +
+    'placeholder="Search records...">' +
+    '</div>';
+
+  html +=
+    '<table>' +
+    '<thead><tr>';
+
+  config.columns.forEach(
+    column => {
+      html +=
+        "<th>" +
+        escapeHtml(column[1]) +
+        "</th>";
+    }
+  );
+
+  html += "<th>Actions</th>";
+  html += "</tr></thead><tbody>";
+
+  if (!rows.length) {
+
+    html +=
+      '<tr><td colspan="' +
+      (config.columns.length + 1) +
+      '" class="muted">' +
+      "No records found." +
+      "</td></tr>";
+
+  } else {
+
+    rows.forEach(row => {
+
+      html += "<tr>";
+
+      config.columns.forEach(
+        column => {
+
+          const value =
+            row[column[0]];
+
+          html +=
+            "<td>" +
+            formatCell(value) +
+            "</td>";
+        }
+      );
+
+      html +=
+        '<td class="actions">' +
+        '<button class="btn dark editRecord" ' +
+        'data-id="' +
+        escapeHtml(row.id) +
+        '">' +
+        "Edit" +
+        "</button>";
+
+      if (canManageRecords()) {
+
+        html +=
+          '<button class="btn red deleteRecord" ' +
+          'data-id="' +
+          escapeHtml(row.id) +
+          '">' +
+          "Delete" +
+          "</button>";
+      }
+
+      html += "</td>";
+      html += "</tr>";
+    });
+  }
+
+  html +=
+    "</tbody></table>" +
+    "</div></div>";
+
+  content.innerHTML = html;
+
+  const search =
+    document.getElementById(
+      "tableSearch"
+    );
+
+  if (search) {
+
+    search.addEventListener(
+      "input",
+      function() {
+
+        const value =
+          search.value
+            .trim()
+            .toLowerCase();
+
+        const filtered =
+          currentRows.filter(
+            row =>
+              JSON.stringify(row)
+                .toLowerCase()
+                .includes(value)
+          );
+
+        renderTable(
+          pageName,
+          filtered
+        );
+      }
+    );
+  }
+
+  content
+    .querySelectorAll(
+      ".editRecord"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        function() {
+
+          const row =
+            currentRows.find(
+              item =>
+                String(item.id) ===
+                String(button.dataset.id)
+            );
+
+          if (row) {
+            openRecordForm(
+              pageName,
+              row
+            );
+          }
+        }
+      );
+    });
+
+  content
+    .querySelectorAll(
+      ".deleteRecord"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        function() {
+
+          deleteRecord(
+            pageName,
+            button.dataset.id
+          );
+        }
+      );
+    });
 }
 
+function formatCell(value) {
 
-/* ---------- Dashboard ---------- */
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+    return '<span class="muted">-</span>';
+  }
 
-async function dashboard(){
+  if (
+    typeof value === "boolean"
+  ) {
+    return value ? "Yes" : "No";
+  }
 
-const tables=[
-"leads",
-"applications",
-"policies",
-"calls",
-"buyers",
-"chargebacks"
-];
+  if (
+    typeof value === "object"
+  ) {
+    return escapeHtml(
+      JSON.stringify(value)
+    );
+  }
 
-const counts={};
-
-for(const t of tables){
-
-let q=db.from(t).select("id",{count:"exact",head:true});
-
-if(profile?.team_id&&!isAdmin()&&t!=="buyers"){
-q=q.eq("team_id",profile.team_id);
+  return escapeHtml(value);
 }
 
-const r=await q;
+function goToPage(pageName) {
 
-counts[t]=r.count||0;
+  if (
+    pageName !== "dashboard" &&
+    !PAGE_CONFIG[pageName]
+  ) {
+    pageName = "dashboard";
+  }
 
+  currentPage = pageName;
+
+  nav
+    .querySelectorAll(
+      "[data-page]"
+    )
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.page ===
+        pageName
+      );
+    });
+
+  if (
+    pageName === "dashboard"
+  ) {
+
+    pageTitle.textContent =
+      "Dashboard";
+
+    addBtn.style.display =
+      "none";
+
+    renderDashboard();
+
+    return;
+  }
+
+  pageTitle.textContent =
+    PAGE_CONFIG[pageName].title;
+
+  addBtn.style.display =
+    canManageRecords() ||
+    pageName === "policies" ||
+    pageName === "applications"
+      ? "block"
+      : "none";
+
+  loadRows(pageName);
 }
 
-$("content").innerHTML=`
+nav.addEventListener(
+  "click",
+  function(event) {
 
-<div class="grid">
+    const button =
+      event.target.closest(
+        "[data-page]"
+      );
 
-<div class="card">
-<div class="muted">Leads</div>
-<div class="num">${counts.leads}</div>
-</div>
+    if (!button) return;
 
-<div class="card">
-<div class="muted">Applications</div>
-<div class="num">${counts.applications}</div>
-</div>
+    goToPage(
+      button.dataset.page
+    );
+  }
+);
 
-<div class="card">
-<div class="muted">Policies</div>
-<div class="num">${counts.policies}</div>
-</div>
+addBtn.addEventListener(
+  "click",
+  function() {
 
-<div class="card">
-<div class="muted">Calls</div>
-<div class="num">${counts.calls}</div>
-</div>
+    if (
+      !canManageRecords() &&
+      !["policies", "applications"]
+        .includes(currentPage)
+    ) {
+      showMessage(
+        "You do not have permission to add records."
+      );
+      return;
+    }
 
-<div class="card">
-<div class="muted">Buyers</div>
-<div class="num">${counts.buyers}</div>
-</div>
+    openRecordForm(
+      currentPage,
+      null
+    );
+  }
+);
+  async function renderDashboard() {
 
-<div class="card">
-<div class="muted">Chargebacks</div>
-<div class="num">${counts.chargebacks}</div>
-</div>
+  setStatus(
+    "Loading dashboard..."
+  );
 
-</div>
+  const result =
+    await db
+      .from("policies")
+      .select(
+        "id,customer_name,premium,agreed_payout,commission_status,first_draft_status,chargeback_amount,created_at"
+      )
+      .limit(5000);
 
-<div class="panel">
-<div class="body">
-<h3>Alpha Nation CRM</h3>
-<p class="muted">
-Logged in as ${esc(profile?.full_name||user.email)}
-</p>
-<p>
-Role: <span class="badge">${esc(profile?.role)}</span>
-</p>
-</div>
-</div>
+  if (result.error) {
 
-`;
+    content.innerHTML =
+      '<div class="panel">' +
+      '<div class="body error">' +
+      escapeHtml(result.error.message) +
+      '</div>' +
+      '</div>';
 
+    setStatus(
+      "Dashboard database error.",
+      "error"
+    );
+
+    return;
+  }
+
+  const rows =
+    result.data || [];
+
+  const total =
+    rows.length;
+
+  const cleared =
+    rows.filter(
+      row =>
+        row.first_draft_status ===
+        "Cleared"
+    ).length;
+
+  const payable =
+    rows.filter(
+      row =>
+        row.commission_status ===
+        "Payable"
+    ).length;
+
+  const paid =
+    rows.filter(
+      row =>
+        row.commission_status ===
+        "Paid"
+    ).length;
+
+  const chargebacks =
+    rows.filter(
+      row =>
+        row.commission_status ===
+        "Chargeback" ||
+        Number(
+          row.chargeback_amount || 0
+        ) > 0
+    ).length;
+
+  const payableAmount =
+    rows
+      .filter(
+        row =>
+          row.commission_status ===
+          "Payable"
+      )
+      .reduce(
+        (sum, row) =>
+          sum +
+          Number(
+            row.agreed_payout || 0
+          ),
+        0
+      );
+
+  const paidAmount =
+    rows
+      .filter(
+        row =>
+          row.commission_status ===
+          "Paid"
+      )
+      .reduce(
+        (sum, row) =>
+          sum +
+          Number(
+            row.agreed_payout || 0
+          ),
+        0
+      );
+
+  const weekAgo =
+    new Date(
+      Date.now() -
+      7 * 24 * 60 * 60 * 1000
+    );
+
+  const weeklySales =
+    rows.filter(
+      row =>
+        row.created_at &&
+        new Date(row.created_at) >=
+        weekAgo
+    ).length;
+
+  content.innerHTML =
+
+    '<div class="grid">' +
+
+    dashboardCard(
+      "Total Policies",
+      total
+    ) +
+
+    dashboardCard(
+      "Cleared Policies",
+      cleared
+    ) +
+
+    dashboardCard(
+      "Payable Policies",
+      payable
+    ) +
+
+    dashboardCard(
+      "Paid Policies",
+      paid
+    ) +
+
+    dashboardCard(
+      "Chargebacks",
+      chargebacks
+    ) +
+
+    dashboardCard(
+      "Sales This Week",
+      weeklySales
+    ) +
+
+    dashboardCard(
+      "Payable",
+      "$" +
+      payableAmount.toFixed(2)
+    ) +
+
+    dashboardCard(
+      "Paid",
+      "$" +
+      paidAmount.toFixed(2)
+    ) +
+
+    "</div>" +
+
+    '<div class="panel">' +
+    '<div class="body">' +
+
+    "<h3>Alpha Nation CRM</h3>" +
+
+    '<p class="muted">' +
+    "CRM database connection is active. " +
+    "Use the navigation menu to manage records." +
+    "</p>" +
+
+    '<p class="muted">' +
+    "Logged in as: " +
+    escapeHtml(
+      currentUser?.email || ""
+    ) +
+    "</p>" +
+
+    "</div></div>";
+
+  setStatus(
+    "Dashboard ready.",
+    "success"
+  );
 }
 
+function dashboardCard(
+  title,
+  value
+) {
 
-/* ---------- Tables ---------- */
-
-async function renderTable(){
-
-const cfg=pageConfig[currentPage];
-
-if(!cfg)return;
-
-setStatus(`Loading ${cfg.title}...`);
-
-try{
-
-currentRows=await fetchRows(cfg.table);
-
-let html=`
-
-<div class="panel">
-
-<div class="ph">
-
-<b>${cfg.title}</b>
-
-<button class="btn" onclick="openForm()">
-+ Add ${cfg.title.slice(0,-1)||"Record"}
-</button>
-
-</div>
-
-<div class="body">
-
-<div class="toolbar">
-
-<input
-id="search"
-placeholder="Search ${cfg.title}..."
-oninput="filterTable()">
-
-</div>
-
-<div id="tableArea">
-${buildTable(currentRows)}
-</div>
-
-</div>
-</div>
-`;
-
-$("content").innerHTML=html;
-
-setStatus(`${currentRows.length} records loaded.`);
-
-}catch(e){
-
-$("content").innerHTML=`
-<div class="panel">
-<div class="body error">${esc(e.message)}</div>
-</div>`;
-
-setStatus("Database error.",true);
-
+  return (
+    '<div class="card">' +
+    '<div class="muted">' +
+    escapeHtml(title) +
+    "</div>" +
+    '<div class="num">' +
+    escapeHtml(value) +
+    "</div>" +
+    "</div>"
+  );
 }
 
+function openRecordForm(
+  pageName,
+  record
+) {
+
+  const config =
+    PAGE_CONFIG[pageName];
+
+  if (!config) return;
+
+  if (
+    !canManageRecords() &&
+    !["policies", "applications"]
+      .includes(pageName)
+  ) {
+
+    showMessage(
+      "Admin access is required."
+    );
+
+    return;
+  }
+
+  editingRecord =
+    record || null;
+
+  modalTitle.textContent =
+    record
+      ? "Edit " + config.title
+      : "Add " + config.title;
+
+  let html = "";
+
+  config.fields.forEach(
+    field => {
+
+      const name =
+        field[0];
+
+      const label =
+        field[1];
+
+      const type =
+        field[2] || "text";
+
+      const options =
+        Array.isArray(field[3])
+          ? field[3]
+          : [];
+
+      const value =
+        record?.[name] ?? "";
+
+      const wide =
+        type === "textarea"
+          ? "wide"
+          : "";
+
+      html +=
+        '<div class="' +
+        wide +
+        '">';
+
+      html +=
+        "<label>" +
+        escapeHtml(label);
+
+      if (type === "textarea") {
+
+        html +=
+          '<textarea name="' +
+          escapeHtml(name) +
+          '">' +
+          escapeHtml(value) +
+          "</textarea>";
+
+      } else if (
+        type === "select"
+      ) {
+
+        html +=
+          '<select name="' +
+          escapeHtml(name) +
+          '">';
+
+        html +=
+          '<option value="">Select...</option>';
+
+        options.forEach(
+          option => {
+
+            html +=
+              '<option value="' +
+              escapeHtml(option) +
+              '"' +
+              (
+                String(value) ===
+                String(option)
+                  ? " selected"
+                  : ""
+              ) +
+              ">" +
+              escapeHtml(option) +
+              "</option>";
+          }
+        );
+
+        html += "</select>";
+
+      } else if (
+        type === "boolean"
+      ) {
+
+        html +=
+          '<select name="' +
+          escapeHtml(name) +
+          '">' +
+
+          '<option value="true"' +
+          (
+            value === true
+              ? " selected"
+              : ""
+          ) +
+          ">Yes</option>" +
+
+          '<option value="false"' +
+          (
+            value === false
+              ? " selected"
+              : ""
+          ) +
+          ">No</option>" +
+
+          "</select>";
+
+      } else {
+
+        const inputType =
+          [
+            "number",
+            "date",
+            "email"
+          ].includes(type)
+            ? type
+            : "text";
+
+        html +=
+          '<input name="' +
+          escapeHtml(name) +
+          '" type="' +
+          inputType +
+          '" value="' +
+          escapeHtml(value) +
+          '">';
+      }
+
+      html +=
+        "</label></div>";
+    }
+  );
+
+  html +=
+    '<div class="wide formActions">' +
+    '<button type="button" id="cancelForm" class="btn dark">' +
+    "Cancel" +
+    "</button>" +
+    '<button type="submit" class="btn">' +
+    "Save" +
+    "</button>" +
+    "</div>";
+
+  recordForm.innerHTML =
+    html;
+
+  modal.classList.remove(
+    "hidden"
+  );
+
+  document
+    .getElementById("cancelForm")
+    .addEventListener(
+      "click",
+      closeModal
+    );
+
+  recordForm.onsubmit =
+    function(event) {
+
+      event.preventDefault();
+
+      saveRecord(
+        pageName
+      );
+    };
 }
 
-function buildTable(rows){
+function closeModal() {
 
-const cfg=pageConfig[currentPage];
+  modal.classList.add(
+    "hidden"
+  );
 
-if(!rows.length){
+  recordForm.innerHTML =
+    "";
 
-return `<p class="muted">No records found. Click + Add to create one.</p>`;
-
+  editingRecord =
+    null;
 }
 
-let html="<table><thead><tr>";
+closeBtn.addEventListener(
+  "click",
+  closeModal
+);
+  async function saveRecord(pageName) {
 
-for(const c of cfg.columns){
-html+=`<th>${esc(c[1])}</th>`;
+  const config =
+    PAGE_CONFIG[pageName];
+
+  if (!config) return;
+
+  if (
+    !canManageRecords() &&
+    !["policies", "applications"]
+      .includes(pageName)
+  ) {
+
+    showMessage(
+      "You do not have permission to save this record."
+    );
+
+    return;
+  }
+
+  const formData =
+    new FormData(recordForm);
+
+  const record =
+    {};
+
+  for (
+    const [key, value]
+    of formData.entries()
+  ) {
+
+    if (
+      value !== ""
+    ) {
+      record[key] =
+        value;
+    }
+  }
+
+  config.fields.forEach(
+    field => {
+
+      const name =
+        field[0];
+
+      const type =
+        field[2];
+
+      if (
+        type === "number" &&
+        record[name] !== undefined
+      ) {
+
+        record[name] =
+          Number(record[name]);
+
+      }
+
+      if (
+        type === "boolean" &&
+        record[name] !== undefined
+      ) {
+
+        record[name] =
+          record[name] === "true";
+      }
+    }
+  );
+
+  if (
+    currentProfile?.team_id &&
+    [
+      "policies",
+      "applications",
+      "leads",
+      "calls"
+    ].includes(pageName)
+  ) {
+
+    record.team_id =
+      currentProfile.team_id;
+  }
+
+  setStatus(
+    editingRecord
+      ? "Updating record..."
+      : "Creating record..."
+  );
+
+  let result;
+
+  if (editingRecord) {
+
+    result =
+      await db
+        .from(config.table)
+        .update(record)
+        .eq(
+          "id",
+          editingRecord.id
+        );
+
+  } else {
+
+    result =
+      await db
+        .from(config.table)
+        .insert(record);
+  }
+
+  if (result.error) {
+
+    showMessage(
+      result.error.message
+    );
+
+    setStatus(
+      "Save failed.",
+      "error"
+    );
+
+    return;
+  }
+
+  closeModal();
+
+  setStatus(
+    "Record saved successfully.",
+    "success"
+  );
+
+  await loadRows(
+    pageName
+  );
 }
 
-html+="<th>Actions</th></tr></thead><tbody>";
+async function deleteRecord(
+  pageName,
+  recordId
+) {
 
-for(const row of rows){
+  if (
+    !canManageRecords()
+  ) {
 
-html+="<tr>";
+    showMessage(
+      "Admin access is required."
+    );
 
-for(const c of cfg.columns){
+    return;
+  }
 
-let value=row[c[0]];
+  const config =
+    PAGE_CONFIG[pageName];
 
-if(typeof value==="boolean"){
-value=value?"Yes":"No";
+  if (!config) return;
+
+  const confirmed =
+    window.confirm(
+      "Delete this record? This action cannot be undone."
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  setStatus(
+    "Deleting record..."
+  );
+
+  const result =
+    await db
+      .from(config.table)
+      .delete()
+      .eq(
+        "id",
+        recordId
+      );
+
+  if (result.error) {
+
+    showMessage(
+      result.error.message
+    );
+
+    setStatus(
+      "Delete failed.",
+      "error"
+    );
+
+    return;
+  }
+
+  setStatus(
+    "Record deleted.",
+    "success"
+  );
+
+  await loadRows(
+    pageName
+  );
 }
 
-if(value&&String(value).length>35){
-value=String(value).slice(0,35)+"...";
+async function createTeam() {
+
+  if (
+    !canManageTeams()
+  ) {
+
+    showMessage(
+      "Owner/Admin access is required."
+    );
+
+    return;
+  }
+
+  const name =
+    window.prompt(
+      "Enter the new team name:"
+    );
+
+  if (!name) {
+    return;
+  }
+
+  const result =
+    await db
+      .from("teams")
+      .insert({
+        name: name.trim(),
+        active: true
+      });
+
+  if (result.error) {
+
+    showMessage(
+      result.error.message
+    );
+
+    return;
+  }
+
+  setStatus(
+    "Team created successfully.",
+    "success"
+  );
+
+  await loadRows(
+    "teams"
+  );
 }
 
-html+=`<td>${esc(value)}</td>`;
+function addTeamButton() {
 
+  if (
+    currentPage !== "teams" ||
+    !canManageTeams()
+  ) {
+    return;
+  }
+
+  const toolbar =
+    content.querySelector(
+      ".toolbar"
+    );
+
+  if (!toolbar) {
+    return;
+  }
+
+  const button =
+    document.createElement(
+      "button"
+    );
+
+  button.className =
+    "btn";
+
+  button.textContent =
+    "+ Add Team";
+
+  button.onclick =
+    createTeam;
+
+  toolbar.prepend(
+    button
+  );
 }
 
-html+=`
+function refreshCurrentPage() {
 
-<td>
+  if (
+    currentPage === "dashboard"
+  ) {
 
-<div class="actions">
+    renderDashboard();
 
-<button class="btn dark"
-onclick="openForm('${row.id}')">
-Edit
-</button>
+  } else {
 
-<button class="btn red"
-onclick="removeRecord('${row.id}')">
-Delete
-</button>
-
-</div>
-
-</td>
-</tr>`;
-
+    loadRows(
+      currentPage
+    );
+  }
 }
 
-html+="</tbody></
+window.addEventListener(
+  "keydown",
+  function(event) {
+
+    if (
+      event.key === "Escape" &&
+      !modal.classList.contains(
+        "hidden"
+      )
+    ) {
+
+      closeModal();
+    }
+  }
+);
+  async function loadRows(pageName) {
+
+  const config = PAGE_CONFIG[pageName];
+
+  if (!config) return;
+
+  setStatus("Loading " + config.title + "...");
+
+  let query = db
+    .from(config.table)
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(500);
+
+  if (
+    currentProfile?.team_id &&
+    ["policies", "applications", "leads", "calls"].includes(pageName)
+  ) {
+    query = query.eq(
+      "team_id",
+      currentProfile.team_id
+    );
+  }
+
+  const result = await query;
+
+  if (result.error) {
+
+    content.innerHTML =
+      '<div class="panel">' +
+      '<div class="body error">' +
+      escapeHtml(result.error.message) +
+      '</div>' +
+      '</div>';
+
+    setStatus(
+      "Could not load " + config.title + ".",
+      "error"
+    );
+
+    return;
+  }
+
+  currentRows = result.data || [];
+
+  renderTable(
+    pageName,
+    currentRows
+  );
+
+  setStatus(
+    config.title + " loaded.",
+    "success"
+  );
+}
+
+function renderTable(
+  pageName,
+  data
+) {
+
+  const config =
+    PAGE_CONFIG[pageName];
+
+  if (!config) return;
+
+  let html =
+    '<div class="panel">' +
+    '<div class="ph">' +
+    '<b>' +
+    escapeHtml(config.title) +
+    '</b>' +
+    '<span class="muted">' +
+    data.length +
+    ' records</span>' +
+    '</div>' +
+    '<div class="body">' +
+
+    '<div class="toolbar">' +
+    '<input id="tableSearch" ' +
+    'placeholder="Search records...">' +
+
+    (
+      canManageRecords()
+        ? '<button id="addRecordBtn" class="btn">+ Add</button>'
+        : ''
+    ) +
+
+    '</div>' +
+
+    '<table>' +
+    '<thead><tr>';
+
+  config.columns.forEach(
+    column => {
+
+      html +=
+        '<th>' +
+        escapeHtml(column[1]) +
+        '</th>';
+    }
+  );
+
+  html +=
+    '<th>Actions</th>' +
+    '</tr></thead><tbody>';
+
+  if (!data.length) {
+
+    html +=
+      '<tr>' +
+      '<td colspan="' +
+      (config.columns.length + 1) +
+      '" class="muted">' +
+      'No records found.' +
+      '</td>' +
+      '</tr>';
+
+  } else {
+
+    data.forEach(
+      row => {
+
+        html +=
+          '<tr>';
+
+        config.columns.forEach(
+          column => {
+
+            const value =
+              row[column[0]];
+
+            html +=
+              '<td>' +
+              escapeHtml(
+                formatCellValue(
+                  value
+                )
+              ) +
+              '</td>';
+          }
+        );
+
+        html +=
+          '<td>' +
+          '<div class="actions">';
+
+        if (
+          canManageRecords()
+        ) {
+
+          html +=
+            '<button class="btn dark editRecord" ' +
+            'data-id="' +
+            escapeHtml(row.id) +
+            '">' +
+            'Edit' +
+            '</button>';
+
+          html +=
+            '<button class="btn red deleteRecord" ' +
+            'data-id="' +
+            escapeHtml(row.id) +
+            '">' +
+            'Delete' +
+            '</button>';
+
+        } else {
+
+          html +=
+            '<button class="btn dark viewRecord" ' +
+            'data-id="' +
+            escapeHtml(row.id) +
+            '">' +
+            'View' +
+            '</button>';
+        }
+
+        html +=
+          '</div></td>' +
+          '</tr>';
+      }
+    );
+  }
+
+  html +=
+    '</tbody></table>' +
+    '</div></div>';
+
+  content.innerHTML =
+    html;
+
+  const search =
+    document.getElementById(
+      "tableSearch"
+    );
+
+  if (search) {
+
+    search.addEventListener(
+      "input",
+      function() {
+
+        const term =
+          this.value
+            .trim()
+            .toLowerCase();
+
+        if (!term) {
+
+          renderTable(
+            pageName,
+            currentRows
+          );
+
+          return;
+        }
+
+        const filtered =
+          currentRows.filter(
+            row =>
+              JSON.stringify(row)
+                .toLowerCase()
+                .includes(term)
+          );
+
+        renderTable(
+          pageName,
+          filtered
+        );
+      }
+    );
+  }
+
+  const addButton =
+    document.getElementById(
+      "addRecordBtn"
+    );
+
+  if (addButton) {
+
+    addButton.onclick =
+      function() {
+
+        openRecordForm(
+          pageName,
+          null
+        );
+      };
+  }
+
+  content
+    .querySelectorAll(
+      ".editRecord"
+    )
+    .forEach(
+      button => {
+
+        button.onclick =
+          function() {
+
+            const row =
+              currentRows.find(
+                item =>
+                  String(item.id) ===
+                  String(
+                    this.dataset.id
+                  )
+              );
+
+            if (row) {
+
+              openRecordForm(
+                pageName,
+                row
+              );
+            }
+          };
+      }
+    );
+
+  content
+    .querySelectorAll(
+      ".deleteRecord"
+    )
+    .forEach(
+      button => {
+
+        button.onclick =
+          function() {
+
+            deleteRecord(
+              pageName,
+              this.dataset.id
+            );
+          };
+      }
+    );
+
+  content
+    .querySelectorAll(
+      ".viewRecord"
+    )
+    .forEach(
+      button => {
+
+        button.onclick =
+          function() {
+
+            const row =
+              currentRows.find(
+                item =>
+                  String(item.id) ===
+                  String(
+                    this.dataset.id
+                  )
+              );
+
+            if (row) {
+
+              openRecordForm(
+                pageName,
+                row
+              );
+            }
+          };
+      }
+    );
+}
+
+function formatCellValue(
+  value
+) {
+
+  if (
+    value === null ||
+    value === undefined
+  ) {
+    return "";
+  }
+
+  if (
+    typeof value === "boolean"
+  ) {
+    return value
+      ? "Yes"
+      : "No";
+  }
+
+  if (
+    typeof value === "object"
+  ) {
+    try {
+
+      return JSON.stringify(
+        value
+      );
+
+    } catch (error) {
+
+      return "";
+    }
+  }
+
+  return String(value);
+}
+
+function showMessage(
+  text
+) {
+
+  if (
+    typeof message !==
+    "undefined" &&
+    message
+  ) {
+
+    message.textContent =
+      text;
+
+    message.className =
+      "msg error";
+  }
+
+  if (
+    typeof statusBox !==
+    "undefined" &&
+    statusBox
+  ) {
+
+    statusBox.textContent =
+      text;
+
+    statusBox.className =
+      "status error";
+  }
+}
+function canManageRecords() {
+  return (
+    currentProfile &&
+    (
+      currentProfile.role === "owner" ||
+      currentProfile.role === "admin"
+    )
+  );
+}
+
+function canManageTeams() {
+  return canManageRecords();
+}
+
+function setUserInfo() {
+
+  if (!currentUser) {
+    userInfo.textContent = "";
+    return;
+  }
+
+  const role =
+    currentProfile?.role || "team";
+
+  const team =
+    currentProfile?.teams?.name || "";
+
+  userInfo.textContent =
+    currentUser.email +
+    " | " +
+    role.toUpperCase() +
+    (
+      team
+        ? " | " + team
+        : ""
+    );
+}
+
+function setPageTitle(
+  pageName
+) {
+
+  if (
+    pageName === "dashboard"
+  ) {
+
+    pageTitle.textContent =
+      "Dashboard";
+
+    return;
+  }
+
+  const config =
+    PAGE_CONFIG[pageName];
+
+  pageTitle.textContent =
+    config
+      ? config.title
+      : pageName;
+}
+
+async function openPage(
+  pageName
+) {
+
+  if (
+    pageName !== "dashboard" &&
+    !PAGE_CONFIG[pageName]
+  ) {
+    return;
+  }
+
+  currentPage =
+    pageName;
+
+  nav
+    .querySelectorAll(
+      "[data-page]"
+    )
+    .forEach(
+      button => {
+
+        button.classList.toggle(
+          "active",
+          button.dataset.page ===
+          pageName
+        );
+      }
+    );
+
+  setPageTitle(
+    pageName
+  );
+
+  if (
+    pageName === "dashboard"
+  ) {
+
+    addBtn.style.display =
+      "none";
+
+    await renderDashboard();
+
+  } else {
+
+    addBtn.style.display =
+      canManageRecords()
+        ? "block"
+        : "none";
+
+    await loadRows(
+      pageName
+    );
+  }
+}
+
+function setupNavigation() {
+
+  nav
+    .querySelectorAll(
+      "[data-page]"
+    )
+    .forEach(
+      button => {
+
+        button.addEventListener(
+          "click",
+          function() {
+
+            openPage(
+              this.dataset.page
+            );
+          }
+        );
+      }
+    );
+
+  addBtn.addEventListener(
+    "click",
+    function() {
+
+      if (
+        currentPage ===
+        "dashboard"
+      ) {
+        return;
+      }
+
+      openRecordForm(
+        currentPage,
+        null
+      );
+    }
+  );
+}
+
+function showApplication() {
+
+  loginPage.classList.add(
+    "hidden"
+  );
+
+  app.classList.remove(
+    "hidden"
+  );
+
+  setUserInfo();
+
+  setupNavigation();
+
+  openPage(
+    "dashboard"
+  );
+}
+
+function showLogin() {
+
+  app.classList.add(
+    "hidden"
+  );
+
+  loginPage.classList.remove(
+    "hidden"
+  );
+
+  currentUser =
+    null;
+
+  currentProfile =
+    null;
+}
+
+async function loadCurrentProfile(
+  userId
+) {
+
+  const result =
+    await db
+      .from("profiles")
+      .select(
+        "id,email,full_name,role,team_id,teams(id,name)"
+      )
+      .eq(
+        "id",
+        userId
+      )
+      .maybeSingle();
+
+  if (
+    result.error
+  ) {
+
+    throw result.error;
+  }
+
+  if (
+    !result.data
+  ) {
+
+    throw new Error(
+      "Your Supabase account exists, but no CRM profile was found. Ask the Owner/Admin to create your CRM profile."
+    );
+  }
+
+  if (
+    ![
+      "owner",
+      "admin",
+      "team"
+    ].includes(
+      result.data.role
+    )
+  ) {
+
+    throw new Error(
+      "Your CRM profile has an invalid role."
+    );
+  }
+
+  currentProfile =
+    result.data;
+
+  return result.data;
+}
+
+async function loginUser() {
+
+  clearMessage();
+
+  const email =
+    emailInput.value.trim();
+
+  const password =
+    passwordInput.value;
+
+  if (!email) {
+
+    showMessage(
+      "Enter your email address."
+    );
+
+    emailInput.focus();
+
+    return;
+  }
+
+  if (!password) {
+
+    showMessage(
+      "Enter your password."
+    );
+
+    passwordInput.focus();
+
+    return;
+  }
+
+  loginBtn.disabled =
+    true;
+
+  loginBtn.textContent =
+    "Signing in...";
+
+  setStatus(
+    "Authenticating with Supabase..."
+  );
+
+  const result =
+    await db.auth
+      .signInWithPassword({
+        email,
+        password
+      });
+
+  if (
+    result.error
+  ) {
+
+    loginBtn.disabled =
+      false;
+
+    loginBtn.textContent =
+      "Sign in";
+
+    showMessage(
+      result.error.message
+    );
+
+    setStatus(
+      "Login failed.",
+      true
+    );
+
+    return;
+  }
+
+  try {
+
+    currentUser =
+      result.data.user;
+
+    await loadCurrentProfile(
+      currentUser.id
+    );
+
+    setStatus(
+      "Login successful.",
+      false
+    );
+
+    showApplication();
+
+  } catch (error) {
+
+    await db.auth.signOut();
+
+    loginBtn.disabled =
+      false;
+
+    loginBtn.textContent =
+      "Sign in";
+
+    showMessage(
+      error.message
+    );
+
+    setStatus(
+      "CRM profile check failed.",
+      true
+    );
+  }
+
+  loginBtn.disabled =
+    false;
+
+  loginBtn.textContent =
+    "Sign in";
+}
+
+loginBtn.addEventListener(
+  "click",
+  loginUser
+);
+
+passwordInput.addEventListener(
+  "keydown",
+  function(event) {
+
+    if (
+      event.key === "Enter"
+    ) {
+
+      loginUser();
+    }
+  }
+);
+
+logoutBtn.addEventListener(
+  "click",
+  async function() {
+
+    setStatus(
+      "Signing out..."
+    );
+
+    await db.auth.signOut();
+
+    showLogin();
+
+    setStatus(
+      "Signed out.",
+      false
+    );
+  }
+);
+  forgotBtn.addEventListener(
+  "click",
+  async function() {
+
+    clearMessage();
+
+    const email =
+      emailInput.value.trim();
+
+    if (!email) {
+
+      showMessage(
+        "Enter your email first."
+      );
+
+      emailInput.focus();
+
+      return;
+    }
+
+    forgotBtn.disabled =
+      true;
+
+    forgotBtn.textContent =
+      "Sending...";
+
+    setStatus(
+      "Sending password reset email..."
+    );
+
+    const redirectUrl =
+      window.location.origin +
+      window.location.pathname;
+
+    const result =
+      await db.auth
+        .resetPasswordForEmail(
+          email,
+          {
+            redirectTo:
+              redirectUrl
+          }
+        );
+
+    forgotBtn.disabled =
+      false;
+
+    forgotBtn.textContent =
+      "Forgot password?";
+
+    if (
+      result.error
+    ) {
+
+      showMessage(
+        result.error.message
+      );
+
+      setStatus(
+        "Password reset failed.",
+        true
+      );
+
+      return;
+    }
+
+    message.textContent =
+      "Password reset email sent. Check your email.";
+
+    message.className =
+      "msg success";
+
+    setStatus(
+      "Password reset email sent.",
+      false
+    );
+  }
+);
+
+async function changePassword() {
+
+  const newPassword =
+    window.prompt(
+      "Enter your new password:"
+    );
+
+  if (
+    newPassword === null
+  ) {
+    return;
+  }
+
+  if (
+    newPassword.length < 6
+  ) {
+
+    showMessage(
+      "Password must be at least 6 characters."
+    );
+
+    return;
+  }
+
+  setStatus(
+    "Changing password..."
+  );
+
+  const result =
+    await db.auth.updateUser({
+      password:
+        newPassword
+    });
+
+  if (
+    result.error
+  ) {
+
+    showMessage(
+      result.error.message
+    );
+
+    setStatus(
+      "Password change failed.",
+      true
+    );
+
+    return;
+  }
+
+  setStatus(
+    "Password changed successfully.",
+    false
+  );
+
+  alert(
+    "Your password has been changed successfully."
+  );
+}
+
+function addAccountSettingsButton() {
+
+  if (!currentUser) {
+    return;
+  }
+
+  const existing =
+    document.getElementById(
+      "changePasswordBtn"
+    );
+
+  if (existing) {
+    return;
+  }
+
+  const button =
+    document.createElement(
+      "button"
+    );
+
+  button.id =
+    "changePasswordBtn";
+
+  button.className =
+    "btn dark";
+
+  button.textContent =
+    "Change Password";
+
+  button.onclick =
+    changePassword;
+
+  logoutBtn.parentNode.insertBefore(
+    button,
+    logoutBtn
+  );
+}
+
+function escapeHtml(
+  value
+) {
+
+  return String(
+    value ?? ""
+  )
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#39;"
+    );
+}
+
+async function initializeCRM() {
+
+  try {
+
+    setStatus(
+      "Connecting to Supabase..."
+    );
+
+    const sessionResult =
+      await db.auth.getSession();
+
+    if (
+      sessionResult.error
+    ) {
+
+      throw sessionResult.error;
+    }
+
+    const session =
+      sessionResult.data.session;
+
+    if (!session) {
+
+      setStatus(
+        "Supabase connected. Please sign in.",
+        false
+      );
+
+      return;
+    }
+
+    currentUser =
+      session.user;
+
+    await loadCurrentProfile(
+      currentUser.id
+    );
+
+    showApplication();
+
+    addAccountSettingsButton();
+
+  } catch (error) {
+
+    console.error(
+      "CRM initialization error:",
+      error
+    );
+
+    setStatus(
+      error.message ||
+      "Unable to connect to CRM.",
+      true
+    );
+  }
+}
+
+db.auth.onAuthStateChange(
+  async function(
+    event,
+    session
+  ) {
+
+    if (
+      event ===
+      "SIGNED_OUT"
+    ) {
+
+      showLogin();
+
+      return;
+    }
+
+    if (
+      event ===
+        "PASSWORD_RECOVERY" &&
+      session
+    ) {
+
+      currentUser =
+        session.user;
+
+      alert(
+        "Enter your new password from the Change Password option."
+      );
+
+      return;
+    }
+
+    if (
+      event ===
+        "SIGNED_IN" &&
+      session
+    ) {
+
+      try {
+
+        currentUser =
+          session.user;
+
+        await loadCurrentProfile(
+          currentUser.id
+        );
+
+        showApplication();
+
+        addAccountSettingsButton();
+
+      } catch (error) {
+
+        console.error(
+          error
+        );
+
+        await db.auth.signOut();
+
+        showLogin();
+
+        showMessage(
+          error.message
+        );
+      }
+    }
+  }
+);
+
+initializeCRM();
+        if (!db) {
+  try {
+    db = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY,
+      {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true
+        }
+      }
+    );
+
+    setStatus(
+      "Supabase connected. Please sign in.",
+      false
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Supabase client error:",
+      error
+    );
+
+    setStatus(
+      "Supabase connection failed: " +
+      error.message,
+      true
+    );
+  }
+}
+
+if (db) {
+  initializeCRM();
+}
+        </script>
+
+</body>
+      </html>
