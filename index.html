@@ -7,12 +7,14 @@
 
 <style>
 *{box-sizing:border-box}
+
 body{
 margin:0;
 background:#080808;
 color:#f5f5f5;
-font:14px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif
+font:14px system-ui,Arial,sans-serif
 }
+
 .hidden{display:none!important}
 
 .login{
@@ -22,12 +24,12 @@ place-items:center;
 padding:20px
 }
 
-.loginBox{
-width:min(430px,100%);
+.box{
+width:min(420px,100%);
 background:#111;
 border:1px solid #292929;
 border-radius:14px;
-padding:28px
+padding:25px
 }
 
 .brand{
@@ -36,18 +38,15 @@ font-weight:900;
 letter-spacing:.5px
 }
 
-h1,h2,h3{margin-top:0}
+h2{margin-bottom:8px}
 
 .muted{color:#999}
-.small{font-size:12px}
-.error{color:#ff7777}
-.success{color:#7ee787}
 
 label{
 display:block;
 color:#aaa;
 font-size:12px;
-margin-top:12px
+margin-top:15px
 }
 
 input,select,textarea{
@@ -56,8 +55,8 @@ background:#090909;
 color:#fff;
 border:1px solid #333;
 border-radius:7px;
-padding:10px;
-margin-top:5px;
+padding:11px;
+margin-top:6px;
 outline:none
 }
 
@@ -65,36 +64,15 @@ input:focus,select:focus,textarea:focus{
 border-color:#777
 }
 
-textarea{
-min-height:90px;
-resize:vertical
-}
-
-button{
-font-family:inherit
-}
-
 .btn{
 background:#eee;
 color:#111;
 border:0;
 border-radius:7px;
-padding:10px 14px;
+padding:11px 15px;
 font-weight:700;
-margin-top:14px;
+margin-top:15px;
 cursor:pointer
-}
-
-.btn.dark{
-background:#191919;
-color:#fff;
-border:1px solid #333
-}
-
-.btn.danger{
-background:#3a1515;
-color:#ff9999;
-border:1px solid #5a2222
 }
 
 .btn:disabled{
@@ -102,38 +80,50 @@ opacity:.5;
 cursor:not-allowed
 }
 
-.link{
-display:inline-block;
-margin-top:13px;
-color:#ddd;
-text-decoration:underline;
-cursor:pointer
+.dark{
+background:#191919;
+color:#fff;
+border:1px solid #333
 }
 
-.statusBox{
-margin-top:15px;
-padding:10px;
-border-radius:7px;
-background:#0c0c0c;
-border:1px solid #222;
+.link{
+background:none;
+border:0;
+color:#aaa;
+cursor:pointer;
+padding:10px 0;
+font-size:13px
+}
+
+.link:hover{color:#fff}
+
+.msg{
+margin-top:13px;
 line-height:1.5
 }
 
-/* APP */
+.error{color:#ff8888}
+.success{color:#7ee787}
+
+.status{
+margin-top:15px;
+padding:10px;
+border-radius:7px;
+background:#0d0d0d;
+border:1px solid #222;
+color:#aaa;
+font-size:12px;
+word-break:break-word
+}
 
 aside{
 position:fixed;
 inset:0 auto 0 0;
-width:235px;
+width:225px;
 background:#101010;
 border-right:1px solid #292929;
 padding:18px 12px;
-overflow:auto;
-z-index:5
-}
-
-aside .brand{
-padding:8px 8px 18px
+overflow:auto
 }
 
 nav button{
@@ -156,22 +146,19 @@ color:#fff
 }
 
 main{
-margin-left:235px;
+margin-left:225px;
 padding:24px;
-max-width:1700px
+max-width:1600px
 }
 
 .top{
 display:flex;
 justify-content:space-between;
 align-items:center;
-gap:15px;
 margin-bottom:20px
 }
 
-.top h1{
-margin:0 0 4px
-}
+.top h1{margin:0}
 
 .grid{
 display:grid;
@@ -179,19 +166,16 @@ grid-template-columns:repeat(4,1fr);
 gap:12px
 }
 
-.card,
-.panel{
+.card,.panel{
 background:#111;
 border:1px solid #292929;
 border-radius:10px
 }
 
-.card{
-padding:16px
-}
+.card{padding:16px}
 
 .num{
-font-size:25px;
+font-size:24px;
 font-weight:800;
 margin-top:6px
 }
@@ -201,29 +185,14 @@ margin-top:18px;
 overflow:auto
 }
 
-.panelHeader{
+.body{padding:16px}
+
+.ph{
 padding:14px 16px;
 border-bottom:1px solid #292929;
 display:flex;
 justify-content:space-between;
-align-items:center;
-gap:10px
-}
-
-.panelBody{
-padding:16px
-}
-
-.toolbar{
-display:flex;
-gap:8px;
-flex-wrap:wrap;
-margin-bottom:14px
-}
-
-.toolbar input{
-margin:0;
-min-width:240px
+align-items:center
 }
 
 table{
@@ -243,67 +212,9 @@ font-size:12px;
 color:#999
 }
 
-.badge{
-display:inline-block;
-padding:3px 8px;
-border-radius:999px;
-background:#222;
-font-size:11px
-}
-
-.modal{
-position:fixed;
-inset:0;
-background:#000c;
-display:grid;
-place-items:center;
-padding:15px;
-z-index:20
-}
-
-.modalBox{
-width:min(950px,100%);
-max-height:90vh;
-overflow:auto;
-background:#121212;
-border:1px solid #333;
-border-radius:12px;
-padding:20px
-}
-
-.modalHeader{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:10px;
-margin-bottom:10px
-}
-
-.form{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px
-}
-
-.wide{
-grid-column:1/-1
-}
-
-.empty{
-padding:30px;
-text-align:center;
-color:#777
-}
-
-.roleOwner{color:#7ee787}
-.roleAdmin{color:#79c0ff}
-.roleTeam{color:#f2cc60}
-
 @media(max-width:850px){
 
-aside{
-width:60px
-}
+aside{width:60px}
 
 aside .brand{
 font-size:0
@@ -332,11 +243,6 @@ padding:14px
 .grid{
 grid-template-columns:repeat(2,1fr)
 }
-
-.form{
-grid-template-columns:1fr
-}
-
 }
 </style>
 </head>
@@ -344,10 +250,9 @@ grid-template-columns:1fr
 <body>
 
 <!-- LOGIN -->
+<div id="loginPage" class="login">
 
-<div id="loginScreen" class="login">
-
-<div class="loginBox">
+<div class="box">
 
 <div class="brand">ALPHA NATION</div>
 
@@ -360,147 +265,78 @@ Authorized users only. Accounts are created by Owner/Admin.
 <label>
 Email
 <input
-id="loginEmail"
+id="email"
 type="email"
 autocomplete="username"
-placeholder="you@example.com"
->
+placeholder="you@example.com">
 </label>
 
 <label>
 Password
 <input
-id="loginPassword"
+id="password"
 type="password"
 autocomplete="current-password"
-placeholder="Password"
->
+placeholder="Password">
 </label>
 
-<button
-id="loginButton"
-class="btn"
-style="width:100%"
->
+<button id="loginBtn" class="btn">
 Sign in
 </button>
 
 <div>
-<span id="forgotPassword" class="link">
+<button id="forgotBtn" class="link">
 Forgot password?
-</span>
+</button>
 </div>
 
-<div id="loginMessage" class="statusBox muted">
+<div id="message" class="msg"></div>
+
+<div id="status" class="status">
 Starting CRM...
 </div>
 
 </div>
-
 </div>
 
 
-<!-- APPLICATION -->
-
+<!-- APP -->
 <div id="app" class="hidden">
 
 <aside>
 
-<div class="brand">
-ALPHA NATION
-</div>
+<div class="brand">ALPHA NATION</div>
 
-<nav id="navigation">
+<nav id="nav">
 
-<button data-page="dashboard">
-Dashboard
-</button>
-
-<button data-page="policies">
-Policies
-</button>
-
-<button data-page="applications">
-Applications
-</button>
-
-<button class="restricted" data-page="leads">
-Leads
-</button>
-
-<button class="restricted" data-page="calls">
-Calls
-</button>
-
-<button class="restricted" data-page="buyers">
-Buyers
-</button>
-
-<button class="restricted" data-page="carriers">
-Carriers
-</button>
-
-<button class="restricted" data-page="campaigns">
-Campaigns
-</button>
-
-<button class="restricted" data-page="agreements">
-Agreements
-</button>
-
-<button class="restricted" data-page="commissions">
-Commissions
-</button>
-
-<button class="restricted" data-page="payments">
-Payments
-</button>
-
-<button class="restricted" data-page="chargebacks">
-Chargebacks
-</button>
-
-<button class="restricted" data-page="team_payouts">
-Team Payouts
-</button>
-
-<button class="restricted" data-page="teams">
-Team Management
-</button>
+<button data-page="dashboard">Dashboard</button>
+<button data-page="policies">Policies</button>
+<button data-page="applications">Applications</button>
+<button data-page="leads">Leads</button>
+<button data-page="calls">Calls</button>
+<button data-page="buyers">Buyers</button>
+<button data-page="carriers">Carriers</button>
+<button data-page="agreements">Agreements</button>
+<button data-page="payments">Payments</button>
+<button data-page="chargebacks">Chargebacks</button>
+<button data-page="teams">Team Management</button>
 
 </nav>
 
-<button
-id="logoutButton"
-class="btn dark"
-style="width:100%"
->
+<button id="logoutBtn" class="btn dark">
 Sign out
 </button>
 
 </aside>
-
 
 <main>
 
 <div class="top">
 
 <div>
-
-<h1 id="pageTitle">
-Dashboard
-</h1>
-
+<h1 id="pageTitle">Dashboard</h1>
 <div id="userInfo" class="muted"></div>
-
 </div>
-
-<button
-id="addButton"
-class="btn"
->
-+ Add
-</button>
 
 </div>
 
@@ -511,43 +347,17 @@ class="btn"
 </div>
 
 
-<!-- MODAL -->
-
-<div id="modal" class="modal hidden">
-
-<div class="modalBox">
-
-<div class="modalHeader">
-
-<h3 id="modalTitle">
-Record
-</h3>
-
-<button
-id="closeModal"
-class="btn dark"
->
-Close
-</button>
-
-</div>
-
-<form id="recordForm" class="form"></form>
-
-</div>
-
-</div>
-
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
 "use strict";
 
-/* =========================================================
-   SUPABASE
-========================================================= */
+/*
+====================================================
+SUPABASE CONFIGURATION
+====================================================
+*/
 
 const SUPABASE_URL =
 "https://yzhtisfmlowkcvavgsxd.supabase.co";
@@ -555,23 +365,534 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_GIhI_6sDVvzggGR1nVvEBg_psCt4iQu";
 
-let supabaseClient=null;
 
-let currentUser=null;
-let profile=null;
-let currentPage="dashboard";
-let currentRows=[];
-let currentMeta=null;
-let editingRecord=null;
+/*
+====================================================
+ELEMENTS
+====================================================
+*/
+
+const loginPage = document.getElementById("loginPage");
+const app = document.getElementById("app");
+
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+
+const loginBtn = document.getElementById("loginBtn");
+const forgotBtn = document.getElementById("forgotBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+
+const message = document.getElementById("message");
+const statusBox = document.getElementById("status");
+
+const userInfo = document.getElementById("userInfo");
+const pageTitle = document.getElementById("pageTitle");
+const content = document.getElementById("content");
+const nav = document.getElementById("nav");
 
 
-/* =========================================================
-   HELPERS
-========================================================= */
+/*
+====================================================
+STATE
+====================================================
+*/
 
-const $=id=>document.getElementById(id);
+let db = null;
+let currentUser = null;
+let currentPage = "dashboard";
 
-function escapeHTML(value){
+
+/*
+====================================================
+HELPERS
+====================================================
+*/
+
+function setStatus(text, type="normal"){
+
+statusBox.textContent = text;
+
+statusBox.className = "status";
+
+if(type === "error"){
+statusBox.classList.add("error");
+}
+
+if(type === "success"){
+statusBox.classList.add("success");
+}
+
+}
+
+
+function setMessage(text, type="error"){
+
+message.textContent = text;
+
+message.className = "msg";
+
+if(type === "success"){
+message.classList.add("success");
+}else{
+message.classList.add("error");
+}
+
+}
+
+
+function clearMessage(){
+message.textContent="";
+message.className="msg";
+}
+
+
+/*
+====================================================
+WAIT FOR SUPABASE
+====================================================
+*/
+
+function waitForSupabase(){
+
+return new Promise((resolve,reject)=>{
+
+let attempts=0;
+
+const timer=setInterval(()=>{
+
+attempts++;
+
+if(
+window.supabase &&
+typeof window.supabase.createClient === "function"
+){
+
+clearInterval(timer);
+
+try{
+
+db=window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+resolve(db);
+
+}catch(error){
+
+clearInterval(timer);
+reject(error);
+
+}
+
+return;
+}
+
+if(attempts>=100){
+
+clearInterval(timer);
+
+reject(
+new Error(
+"Supabase library could not be loaded. Check your internet connection or CDN access."
+)
+);
+
+}
+
+},100);
+
+});
+
+}
+
+
+/*
+====================================================
+SHOW LOGIN
+====================================================
+*/
+
+function showLogin(){
+
+loginPage.classList.remove("hidden");
+app.classList.add("hidden");
+
+}
+
+
+/*
+====================================================
+SHOW APP
+====================================================
+*/
+
+function showApp(){
+
+loginPage.classList.add("hidden");
+app.classList.remove("hidden");
+
+if(currentUser){
+
+userInfo.textContent =
+currentUser.email || "Authenticated user";
+
+}
+
+}
+
+
+/*
+====================================================
+LOGIN
+====================================================
+*/
+
+async function login(){
+
+clearMessage();
+
+const email=emailInput.value.trim();
+const password=passwordInput.value;
+
+if(!email){
+
+setMessage("Enter your email.");
+return;
+
+}
+
+if(!password){
+
+setMessage("Enter your password.");
+return;
+
+}
+
+if(!db){
+
+setMessage(
+"CRM is still initializing. Please wait for the status above."
+);
+
+return;
+
+}
+
+loginBtn.disabled=true;
+loginBtn.textContent="Signing in...";
+
+setStatus("Connecting to Supabase...");
+
+try{
+
+const result =
+await db.auth.signInWithPassword({
+email:email,
+password:password
+});
+
+if(result.error){
+
+throw result.error;
+
+}
+
+if(!result.data || !result.data.user){
+
+throw new Error(
+"Supabase accepted the request but returned no user."
+);
+
+}
+
+currentUser=result.data.user;
+
+setStatus(
+"Authentication successful.",
+"success"
+);
+
+setMessage(
+"Signed in successfully.",
+"success"
+);
+
+showApp();
+
+renderDashboard();
+
+}catch(error){
+
+console.error("LOGIN ERROR:",error);
+
+setMessage(
+error?.message ||
+"Sign in failed."
+);
+
+setStatus(
+"Authentication failed: "+
+(error?.message || "Unknown error"),
+"error"
+);
+
+}finally{
+
+loginBtn.disabled=false;
+loginBtn.textContent="Sign in";
+
+}
+
+}
+
+
+/*
+====================================================
+FORGOT PASSWORD
+====================================================
+*/
+
+async function forgotPassword(){
+
+clearMessage();
+
+const email=emailInput.value.trim();
+
+if(!email){
+
+setMessage(
+"Enter your email first, then click Forgot password."
+);
+
+return;
+
+}
+
+if(!db){
+
+setMessage(
+"CRM has not finished connecting to Supabase."
+);
+
+return;
+
+}
+
+forgotBtn.disabled=true;
+forgotBtn.textContent="Sending...";
+
+try{
+
+const result =
+await db.auth.resetPasswordForEmail(
+email,
+{
+redirectTo:
+"https://alphanationcrm09.github.io/alpha-nation-crm/"
+}
+);
+
+if(result.error){
+
+throw result.error;
+
+}
+
+setMessage(
+"Password reset instructions have been sent to your email.",
+"success"
+);
+
+}catch(error){
+
+console.error("RESET ERROR:",error);
+
+setMessage(
+error?.message ||
+"Could not send password reset email."
+);
+
+}finally{
+
+forgotBtn.disabled=false;
+forgotBtn.textContent="Forgot password?";
+
+}
+
+}
+
+
+/*
+====================================================
+LOGOUT
+====================================================
+*/
+
+async function logout(){
+
+if(db){
+
+await db.auth.signOut();
+
+}
+
+currentUser=null;
+
+showLogin();
+
+setStatus(
+"Signed out."
+);
+
+clearMessage();
+
+}
+
+
+/*
+====================================================
+DASHBOARD
+====================================================
+*/
+
+function renderDashboard(){
+
+currentPage="dashboard";
+
+pageTitle.textContent="Dashboard";
+
+nav.querySelectorAll("button").forEach(button=>{
+
+button.classList.toggle(
+"active",
+button.dataset.page==="dashboard"
+);
+
+});
+
+content.innerHTML=`
+
+<div class="grid">
+
+<div class="card">
+<div class="muted">CRM Status</div>
+<div class="num">Online</div>
+</div>
+
+<div class="card">
+<div class="muted">Authentication</div>
+<div class="num">Active</div>
+</div>
+
+<div class="card">
+<div class="muted">User</div>
+<div class="num">Logged In</div>
+</div>
+
+<div class="card">
+<div class="muted">System</div>
+<div class="num">Ready</div>
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="body">
+
+<h3>Alpha Nation CRM</h3>
+
+<p class="muted">
+You are successfully authenticated.
+</p>
+
+<p>
+Logged in as:
+<strong>${escapeHtml(currentUser?.email || "")}</strong>
+</p>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/*
+====================================================
+PLACEHOLDER PAGES
+====================================================
+*/
+
+const pages={
+
+policies:"Policies",
+applications:"Applications",
+leads:"Leads",
+calls:"Calls",
+buyers:"Buyers",
+carriers:"Carriers",
+agreements:"Agreements",
+payments:"Payments",
+chargebacks:"Chargebacks",
+teams:"Team Management"
+
+};
+
+
+function openPage(page){
+
+if(page==="dashboard"){
+
+renderDashboard();
+return;
+
+}
+
+currentPage=page;
+
+pageTitle.textContent=pages[page] || page;
+
+nav.querySelectorAll("button").forEach(button=>{
+
+button.classList.toggle(
+"active",
+button.dataset.page===page
+);
+
+});
+
+content.innerHTML=`
+
+<div class="panel">
+
+<div class="body">
+
+<h2>${escapeHtml(pages[page] || page)}</h2>
+
+<p class="muted">
+The authentication system is working. This CRM module is ready for the database records to be connected.
+</p>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/*
+====================================================
+ESCAPE HTML
+====================================================
+*/
+
+function escapeHtml(value){
 
 return String(value ?? "")
 .replaceAll("&","&amp;")
@@ -582,521 +903,46 @@ return String(value ?? "")
 
 }
 
-function setLoginMessage(message,type="muted"){
 
-const box=$("loginMessage");
+/*
+====================================================
+NAVIGATION
+====================================================
+*/
 
-box.className="statusBox "+type;
+nav.addEventListener("click",(event)=>{
 
-box.textContent=message;
+const button=
+event.target.closest("button[data-page]");
 
-}
+if(!button)return;
 
-function isOwner(){
+openPage(button.dataset.page);
 
-return profile?.role==="Owner";
-
-}
-
-function isAdmin(){
-
-return profile?.role==="Admin";
-
-}
-
-function isAdminOrOwner(){
-
-return isOwner() || isAdmin();
-
-}
-
-function isTeam(){
-
-return profile?.role==="Team";
-
-}
-
-function stat(title,value){
-
-return `
-<div class="card">
-<div class="muted">${escapeHTML(title)}</div>
-<div class="num">${escapeHTML(value)}</div>
-</div>
-`;
-
-}
-
-
-/* =========================================================
-   TABLE CONFIGURATION
-   BASED ON ACTUAL SUPABASE SCHEMA
-========================================================= */
-
-const TABLES={
-
-policies:{
-title:"Policies",
-table:"policies",
-team:true,
-
-columns:[
-["customer_name","Customer"],
-["state","State"],
-["product","Product"],
-["plan_type","Level/GI"],
-["premium","Premium"],
-["coverage_amount","Coverage"],
-["policy_number","Policy"],
-["approval_status","Approval"],
-["first_draft_status","Draft"],
-["commission_status","Payout"],
-["agreed_payout","Payout"],
-["chargeback_amount","Chargeback"]
-],
-
-fields:[
-["customer_name","Customer"],
-["state","State"],
-["product","Product"],
-["plan_type","Level/GI","select",["Level","GI"]],
-["premium","Premium","number"],
-["coverage_amount","Coverage","number"],
-["policy_number","Policy number"],
-["effective_date","Effective date","date"],
-["approval_status","Approval status"],
-["first_draft_date","First draft date","date"],
-["first_draft_status","First draft status","select",["Pending","Cleared","Failed"]],
-["first_premium_amount","First premium","number"],
-["commission_status","Commission status","select",["Pending","Payable","Paid","Chargeback"]],
-["agreed_payout","Locked payout","number"],
-["agreement_version","Agreement version","number"],
-["commission_amount","Commission amount","number"],
-["chargeback_amount","Chargeback amount","number"],
-["retention_status","Retention status"],
-["retention_month","Retention month","number"],
-["notes","Notes","textarea"]
-]
-},
-
-
-applications:{
-title:"Applications",
-table:"applications",
-team:true,
-
-columns:[
-["customer_name","Customer"],
-["product","Product"],
-["plan_type","Level/GI"],
-["premium","Premium"],
-["coverage_amount","Coverage"],
-["application_number","Application #"],
-["status","Status"],
-["underwriting_status","Underwriting"]
-],
-
-fields:[
-["customer_name","Customer"],
-["product","Product"],
-["product_type","Product type"],
-["plan_type","Level/GI","select",["Level","GI"]],
-["premium","Premium","number"],
-["coverage_amount","Coverage","number"],
-["application_number","Application #"],
-["status","Status"],
-["underwriting_status","Underwriting"]
-]
-},
-
-
-leads:{
-title:"Leads",
-table:"leads",
-restricted:true,
-team:true,
-
-columns:[
-["lead_id","Lead ID"],
-["customer_name","Customer"],
-["phone","Phone"],
-["state","State"],
-["source","Source"],
-["call_status","Status"]
-],
-
-fields:[
-["lead_id","Lead ID"],
-["customer_name","Customer"],
-["phone","Phone"],
-["state","State"],
-["dob","DOB","date"],
-["source","Source"],
-["call_status","Call status"],
-["notes","Notes","textarea"]
-]
-},
-
-
-calls:{
-title:"Calls",
-table:"calls",
-restricted:true,
-team:true,
-
-columns:[
-["called_at","Date"],
-["status","Status"],
-["disposition","Disposition"],
-["duration_seconds","Seconds"],
-["recording_url","Recording"]
-],
-
-fields:[
-["called_at","Called at","datetime-local"],
-["status","Status"],
-["disposition","Disposition"],
-["duration_seconds","Duration seconds","number"],
-["recording_url","Recording URL"],
-["notes","Notes","textarea"]
-]
-},
-
-
-buyers:{
-title:"Buyers",
-table:"buyers",
-restricted:true,
-
-columns:[
-["company_name","Buyer"],
-["contact_name","Contact"],
-["email","Email"],
-["phone","Phone"],
-["payment_terms","Terms"],
-["status","Status"]
-],
-
-fields:[
-["company_name","Company"],
-["contact_name","Contact"],
-["email","Email","email"],
-["phone","Phone"],
-["payment_terms","Payment terms"],
-["status","Status","select",["Active","Inactive"]],
-["notes","Notes","textarea"]
-]
-},
-
-
-carriers:{
-title:"Carriers",
-table:"carriers",
-restricted:true,
-
-columns:[
-["name","Carrier"],
-["status","Status"],
-["notes","Notes"]
-],
-
-fields:[
-["name","Carrier name"],
-["status","Status","select",["Active","Inactive"]],
-["notes","Notes","textarea"]
-]
-},
-
-
-campaigns:{
-title:"Campaigns",
-table:"campaigns",
-restricted:true,
-
-columns:[
-["name","Campaign"],
-["campaign_type","Type"],
-["states","States"],
-["status","Status"]
-],
-
-fields:[
-["name","Campaign name"],
-["campaign_type","Campaign type"],
-["states","States"],
-["status","Status","select",["Active","Paused","Closed"]]
-]
-},
-
-
-agreements:{
-title:"Agreements",
-table:"agreements",
-restricted:true,
-
-columns:[
-["name","Agreement"],
-["version","Version"],
-["effective_from","Effective"],
-["effective_to","End"],
-["level_under_3","Level <3"],
-["level_over_3","Level >3"],
-["gi_payout","GI"]
-],
-
-fields:[
-["name","Agreement"],
-["version","Version","number"],
-["effective_from","Effective from","date"],
-["effective_to","Effective to","date"],
-["level_under_3","Level <3","number"],
-["level_over_3","Level >3","number"],
-["gi_payout","GI payout","number"],
-["first_premium_required","First premium required","checkbox"],
-["notes","Notes","textarea"]
-]
-},
-
-
-commissions:{
-title:"Commissions",
-table:"commissions",
-restricted:true,
-
-columns:[
-["policy_id","Policy ID"],
-["amount","Amount"],
-["status","Status"],
-["due_date","Due"],
-["paid_date","Paid"]
-],
-
-fields:[
-["policy_id","Policy ID"],
-["amount","Amount","number"],
-["status","Status","select",["Pending","Payable","Paid","Chargeback"]],
-["due_date","Due date","date"],
-["paid_date","Paid date","date"],
-["notes","Notes","textarea"]
-]
-},
-
-
-payments:{
-title:"Payments",
-table:"payments",
-restricted:true,
-
-columns:[
-["payment_date","Date"],
-["payment_type","Type"],
-["amount_usd","USD"],
-["amount_pkr","PKR"],
-["status","Status"],
-["reference","Reference"]
-],
-
-fields:[
-["buyer_id","Buyer ID"],
-["policy_id","Policy ID"],
-["payment_type","Payment type"],
-["amount_usd","USD","number"],
-["exchange_rate","Exchange rate","number"],
-["amount_pkr","PKR","number"],
-["status","Status"],
-["payment_date","Payment date","date"],
-["reference","Reference"],
-["notes","Notes","textarea"]
-]
-},
-
-
-chargebacks:{
-title:"Chargebacks",
-table:"chargebacks",
-restricted:true,
-
-columns:[
-["policy_id","Policy ID"],
-["amount_usd","Amount"],
-["reason","Reason"],
-["status","Status"],
-["chargeback_date","Date"],
-["recovered_date","Recovered"]
-],
-
-fields:[
-["policy_id","Policy ID"],
-["amount_usd","Amount","number"],
-["reason","Reason"],
-["status","Status"],
-["chargeback_date","Chargeback date","date"],
-["recovered_date","Recovered date","date"],
-["notes","Notes","textarea"]
-]
-},
-
-
-team_payouts:{
-title:"Team Payouts",
-table:"team_payouts",
-restricted:true,
-team:true,
-
-columns:[
-["policy_id","Policy"],
-["team_member_id","Team Member"],
-["cost_usd","Cost USD"],
-["cost_pkr","Cost PKR"],
-["status","Status"],
-["payment_date","Payment Date"]
-],
-
-fields:[
-["policy_id","Policy ID"],
-["team_member_id","Team member ID"],
-["cost_usd","Cost USD","number"],
-["exchange_rate","Exchange rate","number"],
-["cost_pkr","Cost PKR","number"],
-["status","Status"],
-["payment_date","Payment date","date"],
-["notes","Notes","textarea"]
-]
-}
-
-};
-
-
-/* =========================================================
-   INITIALIZE SUPABASE
-========================================================= */
-
-function initializeSupabase(){
-
-try{
-
-if(!window.supabase){
-
-throw new Error(
-"Supabase library did not load. Check your internet connection."
-);
-
-}
-
-supabaseClient=
-window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
-);
-
-return true;
-
-}catch(error){
-
-setLoginMessage(
-"Supabase initialization failed: "+
-error.message,
-"error"
-);
-
-return false;
-
-}
-
-}
-
-
-/* =========================================================
-   PROFILE
-========================================================= */
-
-async function loadProfile(user){
-
-const result=await supabaseClient
-.from("profiles")
-.select(`
-id,
-full_name,
-role,
-active,
-created_at,
-updated_at,
-email,
-team_id
-`)
-.eq("id",user.id)
-.maybeSingle();
-
-if(result.error){
-
-throw new Error(
-"Profile error: "+
-result.error.message
-);
-
-}
-
-if(!result.data){
-
-throw new Error(
-"No CRM profile exists for this login. Ask the Owner to create your CRM profile."
-);
-
-}
-
-if(!["Owner","Admin","Team"].includes(result.data.role)){
-
-throw new Error(
-"Invalid CRM role."
-);
-
-}
-
-if(result.data.active===false){
-
-throw new Error(
-"Your CRM account is disabled."
-);
-
-}
-
-profile=result.data;
-
-currentUser=user;
-
-}
-
-
-/* =========================================================
-   AUTH
-========================================================= */
-
-async function login(){
-
-const email=$("loginEmail").value.trim();
-const password=$("loginPassword").value;
-
-if(!email||!password){
-
-setLoginMessage(
-"Enter your email and password.",
-"error"
-);
-
-return;
-
-}
-
-$("loginButton").disabled=true;
-$("loginButton").textContent="Signing in...";
-
-try{
-
-const result=
-await supabaseClient.auth.signInWithPassword({
-email,
-password
 });
+
+
+/*
+====================================================
+AUTH SESSION CHECK
+====================================================
+*/
+
+async function checkSession(){
+
+if(!db){
+
+throw new Error(
+"Supabase client is not initialized."
+);
+
+}
+
+setStatus(
+"Checking existing CRM session..."
+);
+
+const result=await db.auth.getSession();
 
 if(result.error){
 
@@ -1104,274 +950,169 @@ throw result.error;
 
 }
 
-await loadProfile(result.data.user);
+const session=result.data?.session;
+
+if(session?.user){
+
+currentUser=session.user;
 
 showApp();
 
-goTo("dashboard");
+renderDashboard();
 
-}catch(error){
-
-await supabaseClient.auth.signOut().catch(()=>{});
-
-setLoginMessage(
-error.message||
-"Sign in failed.",
-"error"
-);
-
-}finally{
-
-$("loginButton").disabled=false;
-$("loginButton").textContent="Sign in";
-
-}
-
-}
-
-
-/* =========================================================
-   FORGOT PASSWORD
-========================================================= */
-
-async function forgotPassword(){
-
-const email=$("loginEmail").value.trim();
-
-if(!email){
-
-setLoginMessage(
-"Enter your email first, then click Forgot password.",
-"error"
-);
-
-$("loginEmail").focus();
-
-return;
-
-}
-
-setLoginMessage(
-"Sending password reset email...",
-"muted"
-);
-
-try{
-
-const redirectURL=
-window.location.origin+
-window.location.pathname;
-
-const result=
-await supabaseClient.auth.resetPasswordForEmail(
-email,
-{
-redirectTo:redirectURL
-}
-);
-
-if(result.error){
-
-throw result.error;
-
-}
-
-setLoginMessage(
-"Password reset email sent. Check your email inbox.",
+setStatus(
+"Existing session restored.",
 "success"
 );
 
+}else{
+
+showLogin();
+
+setStatus(
+"CRM ready. Enter your email and password.",
+"success"
+);
+
+}
+
+}
+
+
+/*
+====================================================
+AUTH STATE LISTENER
+====================================================
+*/
+
+function setupAuthListener(){
+
+if(!db)return;
+
+db.auth.onAuthStateChange(
+(event,session)=>{
+
+console.log(
+"Supabase Auth:",
+event
+);
+
+if(event==="SIGNED_IN" && session?.user){
+
+currentUser=session.user;
+
+showApp();
+
+renderDashboard();
+
+}
+
+if(event==="SIGNED_OUT"){
+
+currentUser=null;
+
+showLogin();
+
+}
+
+}
+);
+
+}
+
+
+/*
+====================================================
+BUTTON EVENTS
+====================================================
+*/
+
+loginBtn.addEventListener(
+"click",
+login
+);
+
+forgotBtn.addEventListener(
+"click",
+forgotPassword
+);
+
+logoutBtn.addEventListener(
+"click",
+logout
+);
+
+passwordInput.addEventListener(
+"keydown",
+event=>{
+
+if(event.key==="Enter"){
+
+login();
+
+}
+
+}
+);
+
+
+/*
+====================================================
+START CRM
+====================================================
+*/
+
+async function startCRM(){
+
+try{
+
+setStatus(
+"Loading Supabase..."
+);
+
+await waitForSupabase();
+
+setStatus(
+"Supabase library loaded.",
+"success"
+);
+
+await checkSession();
+
+setupAuthListener();
+
 }catch(error){
 
-setLoginMessage(
-"Password reset failed: "+
-error.message,
+console.error(
+"CRM START ERROR:",
+error
+);
+
+setStatus(
+"CRM initialization failed: "+
+(error?.message || "Unknown error"),
 "error"
 );
 
-}
-
-}
-
-
-/* =========================================================
-   SHOW APP
-========================================================= */
-
-function showApp(){
-
-$("loginScreen").classList.add("hidden");
-
-$("app").classList.remove("hidden");
-
-applyPermissions();
-
-renderUserInfo();
-
-}
-
-function renderUserInfo(){
-
-if(!profile)return;
-
-let roleClass=
-profile.role==="Owner"
-?
-"roleOwner"
-:
-profile.role==="Admin"
-?
-"roleAdmin"
-:
-"roleTeam";
-
-$("userInfo").innerHTML=`
-<span class="${roleClass}">
-${escapeHTML(profile.role)}
-</span>
-|
-${escapeHTML(
-profile.full_name||
-profile.email||
-currentUser?.email||
-""
-)}
-`;
-
-}
-
-
-/* =========================================================
-   PERMISSIONS
-========================================================= */
-
-function applyPermissions(){
-
-document
-.querySelectorAll(".restricted")
-.forEach(button=>{
-
-button.style.display=
-isAdminOrOwner()
-?
-"block"
-:
-"none";
-
-});
-
-}
-
-
-/* =========================================================
-   TEAM FILTER
-========================================================= */
-
-function applyTeamFilter(query,table){
-
-if(
-isTeam() &&
-profile?.team_id &&
-[
-"policies",
-"applications",
-"leads",
-"calls",
-"team_payouts"
-].includes(table)
-){
-
-return query.eq(
-"team_id",
-profile.team_id
+setMessage(
+"Initialization error: "+
+(error?.message || "Unknown error")
 );
 
 }
 
-return query;
-
 }
 
 
-/* =========================================================
-   DASHBOARD
-========================================================= */
+/*
+====================================================
+START
+====================================================
+*/
 
-async function loadDashboard(){
+startCRM();
 
-let query=
-supabaseClient
-.from("policies")
-.select(`
-id,
-premium,
-agreed_payout,
-chargeback_amount,
-first_draft_status,
-commission_status,
-created_at,
-team_id
-`);
+</script>
 
-query=
-applyTeamFilter(query,"policies");
-
-const result=
-await query.limit(5000);
-
-if(result.error){
-
-$("content").innerHTML=`
-<div class="panel">
-<div class="panelBody error">
-${escapeHTML(result.error.message)}
-</div>
-</div>
-`;
-
-return;
-
-}
-
-const data=result.data||[];
-
-const weekAgo=
-Date.now()-
-7*24*60*60*1000;
-
-const cleared=
-data.filter(
-x=>x.first_draft_status==="Cleared"
-);
-
-const payable=
-data.filter(
-x=>x.commission_status==="Payable"
-);
-
-const paid=
-data.filter(
-x=>x.commission_status==="Paid"
-);
-
-const chargebacks=
-data.filter(
-x=>
-x.commission_status==="Chargeback"||
-Number(x.chargeback_amount||0)>0
-);
-
-const weekly=
-data.filter(
-x=>
-x.created_at &&
-new Date(x.created_at).getTime()>=weekAgo
-);
-
-$("content").innerHTML=`
-
-<div class="grid">
-
-${stat("Total Policies",data.length)}
-
-${stat("Cleared Policies",cleared.leng
+</body>
+</html>
